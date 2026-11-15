@@ -37,6 +37,8 @@ const CHAPTERS = {
     intro: 'You are driving Opportunity. Hold the arrow to drive. Let go to rest and charge.',
     lowBattery: 'Low battery, resting...',
     stormTitle: '14 years later...',
+    stormWhy: 'A giant dust storm is covering the sky! The solar panels cannot get sunlight to charge. Tap Sleep to help Opportunity save its power.',
+    asleepLine: 'Zzz... Opportunity is asleep.',
     windLine: 'Wind cleaned the panels!',
     // README 9.4 fixed ending text, verbatim, one sentence per line
     endingLines: [

@@ -136,26 +136,42 @@ class MarsScene extends ChapterBase {
     await Fx.wait(this, tt);
     veil.destroy(); title.destroy();
 
-    // 2. Clear
-    this.phase = 'clear';
-    await Fx.wait(this, K.STORM_CLEAR_SEC * 1000 * T);
-
-    // 3. Hazy: dusty tint, half charge, dust starts, wind can help
-    this.phase = 'hazy';
-    this.windOn = true; this.windT = Phaser.Math.FloatBetween(K.WIND_MIN_SEC, K.WIND_MAX_SEC) * T;
-    this.tweens.add({ targets: this.haze, alpha: 0.3, duration: 2500 * T });
-    this.tweens.add({ targets: this.sun, alpha: 0.6, duration: 2500 * T });
-    await Fx.wait(this, K.STORM_HAZY_SEC * 1000 * T);
-
-    // 4. Storm: dark orange-brown sky, very slow charging, heavy dust
+    // 2. The storm rolls in: dark orange-brown sky, heavy dust. The rover stops; the player is
+    //    told why it must sleep and taps Sleep (it also sleeps by itself, so nobody gets stuck).
+    this.setState('STORY');
+    this.speed = 0;
     this.phase = 'storm';
     AudioSys.loop('storm_loop');
-    this.tweens.add({ targets: this.stormTint, alpha: 0.5, duration: 3000 * T });
-    this.tweens.add({ targets: this.sun, alpha: 0.2, duration: 3000 * T });
-    await Fx.wait(this, K.STORM_STORM_SEC * 1000 * T);
+    Haptics.wind();
+    this.tweens.add({ targets: this.haze, alpha: 0.3, duration: 1200 });
+    this.tweens.add({ targets: this.stormTint, alpha: 0.5, duration: 1500 });
+    this.tweens.add({ targets: this.sun, alpha: 0.2, duration: 1500 });
+    await Fx.wait(this, 800);
+    const why = new PixelText(this, 240, 74, this.cfg.stormWhy, { size: 11, bold: true, color: '#ffffff', shadow: '#14141f', wrap: 380, align: 'center' })
+      .setDepth(86).setAlpha(0);
+    this.tweens.add({ targets: why, alpha: 1, duration: 400 });
+    await new Promise(res => {
+      let done = false;
+      const go = () => { if (!done) { done = true; res(); } };
+      this.sleepBtn = new Button(this, 240, 140, 'Sleep', go, { w: 110, h: 30, size: 16, face: 0x5a5ad0, lip: 0x30307a }).setDepth(90).pulse(true);
+      this.time.delayedCall(K.STORM_AUTOSLEEP_SEC * 1000 * T, go);
+    });
+    this.sleepBtn.destroy(); this.sleepBtn = null;
+    why.destroy();
 
-    // 5. The storm cannot be beaten: battery forced down, Opportunity falls asleep
+    // 3. Asleep through the storm (rover still, max 10 s)
     await this.fallAsleep();
+    const zzz = new PixelText(this, 240, 74, this.cfg.asleepLine, { size: 12, bold: true, color: '#cfd6ff', shadow: '#14141f' }).setDepth(86);
+    this.tweens.add({ targets: zzz, alpha: 0.5, duration: 900, yoyo: true, repeat: -1 });
+    await Fx.wait(this, K.STORM_SEC * 1000 * T);
+
+    // 4. The storm goes away
+    zzz.destroy();
+    this.phase = 'after';
+    AudioSys.stop('storm_loop');
+    this.tweens.add({ targets: [this.haze, this.stormTint], alpha: 0, duration: 1800 });
+    this.tweens.add({ targets: this.sun, alpha: 1, duration: 1800 });
+    await Fx.wait(this, 1800);
     await this.endingText();
     await this.finishChapter(this.cfg.patch, this.cfg.closingLine);
   }
@@ -167,7 +183,7 @@ class MarsScene extends ChapterBase {
     Haptics.sleep();
     this.phase = 'asleep';
     AudioSys.stop('charge_loop');
-    await Fx.tween(this, { targets: this, battery: 0, duration: 1800, ease: 'Sine.easeIn' });
+    await Fx.tween(this, { targets: this, battery: 0, duration: 1000, ease: 'Sine.easeIn' });
     // speed is decelerated in afterUpdate; make sure the wheels have stopped before swapping art
     await Fx.wait(this, 300);
     this.speed = 0;
