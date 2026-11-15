@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- Still Here. Engine: Phaser 3.90.0 (phaser.min.js, local copy, no CDN). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Still Here</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; background: #000; overflow: hidden;
+      height: 100%; height: 100dvh; width: 100%;
+      touch-action: none; user-select: none; -webkit-user-select: none;
+      -webkit-touch-callout: none; overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #game {
+      position: fixed; inset: 0;
+      /* keep the canvas clear of notches and rounded corners */
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      box-sizing: border-box;
+    }
+    canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+  <script src="phaser.min.js"></script>
+  <script src="src/constants.js"></script>
+  <!-- Scenes and modules are added in Phase 1 -->
+  <script>
+    // Block the long-press menu on the game container
+    document.getElementById('game').addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  </script>
+</body>
+</html>
