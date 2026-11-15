@@ -1,6 +1,6 @@
 # PROGRESS.md
 
-## Current: Phase 3 complete (Mars chapter). Stopped as instructed.
+## Current: Phase 4 complete. Phase 5 in progress.
 
 ### Done
 - Folder structure from README Section 6 (`src/`, `src/data`, `src/scenes`, `src/ui`, `assets/`, `audio/`, `tools/`).
@@ -42,7 +42,21 @@
   - Patches: moon, mars, gold. No gold without the Moon. No console errors.
 - `tools/smoke_moon.js` still passes.
 
-### Next: Phase 4 (Home, Album, Album Hall)
+### Phase 4 done
+- `HomeScene`: logo, stars, two Mission Cards (float-up, hover/press scale, pulsing "?" silhouettes, counters). Album, Sound and Reset buttons (Reset asks for confirmation). Three patch slots, plus a Certificate button once the gold patch is earned. Boot now goes to Home.
+- `AlbumHallScene`:
+  - Two shelves with a staggered entrance. A locked card shakes and shows "Find it on the Moon/Mars".
+  - Tapping a collected card dims the board (blurs it too on WebGL), and the card flies to the centre with a flip. The detail panel slides in with name, short text, Read more/less (long text in place), a source link (`window.open(url, '_blank', 'noopener')`, hidden if unverified) and the tag.
+  - < > and keyboard arrows go to prev/next collected card with a slide. X, Esc or tapping outside sends the card back to its slot.
+  - After the gold patch it opens in finale mode with a pulsing Certificate button.
+- `CertificateScene`: "Still Here Explorer", three patches, the line, a screenshot hint, Home. Only reachable with both patches.
+- Fixed: Phaser picks the top-most tap target using the last frame's render list, and Zones never render, so a Zone always lost to a drawn overlay. All tap targets are now zero-alpha rectangles (`Fx.hitRect`). The Album overlay only closes when nothing else is under the tap.
+- Fixed: the 44 CSS px minimum hit size used an inverted scale (hit areas were too big, never too small).
+- Fixed: black "?" silhouettes were invisible on near-black slots. Locked slots now have a lighter backing.
+- The detail panel always sits beside the card: the canvas is always 480x270 landscape (portrait shows the rotate overlay), so a "narrow" layout can't happen.
+- `tools/smoke_album.js` passes: Home counters and patches persist after reload; all 9 cards open with the correct name, short, long and source; Read more/less; the source link opens in a new tab with noopener; locked cards hint; next/prev skip uncollected and wrap; X, Esc and outside close and the card returns to its own slot; mission card starts its chapter; Reset No/Yes; Certificate. No console errors.
+
+### Next: Phase 5 (polish, mobile)
 
 ### Known issues / for the human
 - The session network blocked the source sites, so the facts are checked from search summaries only (see `FACTCHECK.md`). Please click every source link once before submission.

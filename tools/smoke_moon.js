@@ -26,8 +26,8 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
     await page.waitForFunction(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, null, { timeout: 15000 });
     await click(240, 130);
     // until Home exists, Boot goes to the next unfinished chapter; this test wants the Moon
-    await page.waitForFunction(() => game.scene.isActive('MoonScene') || game.scene.isActive('MarsScene'), null, { timeout: 5000 });
-    await page.evaluate(() => { if (game.scene.isActive('MarsScene')) game.scene.getScene('MarsScene').scene.start('MoonScene'); });
+    await page.waitForFunction(() => game.scene.isActive('HomeScene'), null, { timeout: 5000 });
+    await page.evaluate(() => game.scene.getScene('HomeScene').scene.start('MoonScene'));
     await page.waitForFunction(() => game.scene.isActive('MoonScene') && game.scene.getScene('MoonScene').topBar, null, { timeout: 5000 });
   };
   const M = () => page.evaluate(() => { const s = game.scene.getScene('MoonScene'); return { state: s.state, worldX: s.worldX, n: State.countChapter('moon') }; });
@@ -73,8 +73,8 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
   ok(!(await page.evaluate(() => State.hasPatch('gold'))), 'no gold patch with only one chapter');
   await sleep(800);
   await click(240, 238);   // Continue
-  await page.waitForFunction(() => game.scene.isActive('BootScene'), null, { timeout: 5000 });
-  ok(true, 'Continue leaves the chapter (to the title until Home exists)');
+  await page.waitForFunction(() => game.scene.isActive('HomeScene'), null, { timeout: 5000 });
+  ok(true, 'Continue returns to Home');
 
   // replay: no double count, ending + patch still work
   await page.reload();

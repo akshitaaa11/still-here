@@ -36,7 +36,7 @@ const Controls = (() => {
       const size = 48, x = K.GAME_W - 12 - size / 2, y = K.GAME_H - 12 - size / 2;
       const img = scene.add.image(x, y, 'arrow_up').setDisplaySize(size, size).setDepth(60).setAlpha(0.92);
       // Hit area bigger than the picture: at least 44 CSS px on any screen
-      const hit = scene.add.zone(x, y, 76, 76).setDepth(61).setInteractive();
+      const hit = Fx.hitRect(scene, x, y, 76, 76).setDepth(61);
       const down = p => { pointers.add(p.id); img.setTexture('arrow_down'); };
       const upAny = p => { pointers.delete(p.id); released(); if (!pointers.size) img.setTexture('arrow_up'); };
       hit.on('pointerdown', down);

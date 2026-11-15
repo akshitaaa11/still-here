@@ -146,14 +146,15 @@ class ChapterBase extends Phaser.Scene {
     await new Promise(res => {
       new Button(this, 240, closingLine ? 250 : 238, 'Continue', res, { w: 110, h: closingLine ? 22 : 26, size: 12 }).setDepth(120);
     });
-    this.leave(gold ? 'AlbumHallScene' : 'HomeScene');
+    // Second patch: the Album Hall is the finale (then the certificate)
+    this.leave(gold ? 'AlbumHallScene' : 'HomeScene', gold ? { finale: true } : undefined);
   }
 
   // Quick fade, then go. Scenes that do not exist yet fall back to Home, then the title.
-  leave(key) {
+  leave(key, data) {
     const has = k => !!this.scene.manager.keys[k];
     const target = has(key) ? key : (has('HomeScene') ? 'HomeScene' : 'BootScene');
     this.cameras.main.fadeOut(250);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(target));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(target, data));
   }
 }

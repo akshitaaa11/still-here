@@ -6,15 +6,7 @@ class MoonScene extends ChapterBase {
   getConfig() { return CHAPTERS.moon; }
 
   buildWorld() {
-    // Twinkling stars, drawn in code (never faster than a slow fade)
-    const rng = new Phaser.Math.RandomDataGenerator(['moon-stars']);
-    for (let i = 0; i < 70; i++) {
-      const x = rng.between(0, K.GAME_W - 1), y = rng.between(30, 150);
-      const s = this.add.rectangle(x, y, 1, 1, rng.pick([0xffffff, 0xfff3a0, 0xb9b9c4])).setOrigin(0, 0).setDepth(0.5);
-      if (rng.frac() < 0.35) {
-        this.tweens.add({ targets: s, alpha: 0.2, duration: rng.between(1200, 2600), yoyo: true, repeat: -1, delay: rng.between(0, 2000) });
-      }
-    }
+    Fx.stars(this, 70, 30, 150, 'moon-stars');   // twinkling stars, drawn in code
     // Earth, low in the sky
     this.add.image(436, 86, this.earthTexture()).setDepth(0.6);   // clear of the centred story text
     new PixelText(this, 6, 262, 'Not to scale', { size: 8, color: '#b9b9c4', shadow: '#14141f', originX: 0, originY: 1 }).setDepth(70);

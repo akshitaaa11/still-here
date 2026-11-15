@@ -18,7 +18,7 @@ class Button {
     this.label = new PixelText(scene, 0, 0, label, { size: o.size || 10, bold: true, color: o.color || '#ffffff', shadow: '#14141f' });
     this.inner.add([edge, base, top, shine, this.label]);
 
-    this.zone = scene.add.zone(x, y, this.w, this.h).setInteractive({ useHandCursor: true });
+    this.zone = Fx.hitRect(scene, x, y, this.w, this.h);   // tap target (see Fx.hitRect)
     this.fitHit();
     this.onResize = () => this.fitHit();
     scene.scale.on('resize', this.onResize);
@@ -44,11 +44,12 @@ class Button {
     this.scene.tweens.add({ targets: this.visual, scaleX: 1, scaleY: 1, duration: 80, ease: 'Back.easeOut' });
   }
 
-  // Hit area never smaller than 44 CSS px on the real screen
+  // Hit area never smaller than 44 CSS px on the real screen.
+  // displayScale = game px per CSS px, so 44 CSS px = 44 * displayScale game px.
   fitHit() {
     const ds = this.scene.scale.displayScale ? this.scene.scale.displayScale.x : 1;
-    const min = 44 / (ds || 1);
-    this.zone.setSize(Math.max(this.w, min), Math.max(this.h, min));
+    const min = 44 * (ds || 1);
+    Fx.resizeHit(this.zone, Math.max(this.w, min), Math.max(this.h, min));
   }
 
   // Put the button parts into a container (the card popup does this)

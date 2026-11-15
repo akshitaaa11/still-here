@@ -13,10 +13,10 @@ class TopBar {
     this.slots = this.cards.map((card, i) => {
       const p = this.getSlotPosition(i);
       scene.add.rectangle(p.x, p.y, this.slotW + 2, this.slotW + 2, 0x4a4a55).setDepth(D + 1);
-      scene.add.rectangle(p.x, p.y, this.slotW, this.slotW, 0x1b1b36).setDepth(D + 1);
       const owned = State.has(card.id);
+      const bg = scene.add.rectangle(p.x, p.y, this.slotW, this.slotW, owned ? 0x1b1b36 : 0x3a3a5a).setDepth(D + 1);
       const img = scene.add.image(p.x, p.y, this.artKey(card, owned)).setDepth(D + 2);
-      return { card, img, filled: owned };
+      return { card, img, bg, filled: owned };
     });
 
     const cx = this.x0 + this.total * (this.slotW + this.gap) + 4;
@@ -53,6 +53,7 @@ class TopBar {
     const s = this.scene;
     await Fx.tween(s, { targets: slot.img, scaleX: 0, duration: 150 });
     slot.img.setTexture(this.artKey(slot.card, true));
+    slot.bg.setFillStyle(0x1b1b36);
     const p = this.getSlotPosition(index);
     const flash = s.add.rectangle(p.x, p.y, this.slotW, this.slotW, 0xfff3a0).setDepth(95);
     s.tweens.add({ targets: flash, alpha: 0, duration: 250, onComplete: () => flash.destroy() });

@@ -32,8 +32,8 @@ const ENDING = 'Opportunity was built to last 90 Mars days. It lasted about 14 a
     await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, 15000);
     await page.evaluate(s => { localStorage.setItem('stillHere', JSON.stringify(s)); State.load(); }, save);
     await click(240, 130);
-    await waitFor(() => game.scene.isActive('MarsScene') || game.scene.isActive('MoonScene'), 5000);
-    await page.evaluate(() => { if (game.scene.isActive('MoonScene')) game.scene.getScene('MoonScene').scene.start('MarsScene'); });
+    await waitFor(() => game.scene.isActive('HomeScene'), 5000);
+    await page.evaluate(() => game.scene.getScene('HomeScene').scene.start('MarsScene'));
     await waitFor(() => game.scene.isActive('MarsScene') && game.scene.getScene('MarsScene').topBar, 5000);
     await page.evaluate(() => {
       window.__wind = 0;
@@ -155,8 +155,8 @@ const ENDING = 'Opportunity was built to last 90 Mars days. It lasted about 14 a
   await page.screenshot({ path: OUT + 'gold.png' });
   ok(JSON.stringify(await page.evaluate(() => JSON.parse(localStorage.getItem('stillHere')).patches)) === '["moon","mars","gold"]', 'patches saved: moon, mars, gold');
   await click(240, 250);
-  await waitFor(() => !game.scene.isActive('MarsScene'), 6000);
-  ok(true, 'Continue leaves Mars (Album Hall comes in Phase 4; falls back for now)');
+  await waitFor(() => game.scene.isActive('AlbumHallScene') && game.scene.getScene('AlbumHallScene').finale, 6000);
+  ok(true, 'after the gold patch, Continue opens the Album Hall finale');
 
   // ---------- Run 2: do nothing during the storm; Mars-only save -> no gold ----------
   await startMars({ moon: [], mars: ['landing_platform', 'cone_parachute', 'heat_shield'], patches: [], sound: false, version: 1 });
