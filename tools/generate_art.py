@@ -790,34 +790,74 @@ GLYPHS = {
 }
 
 
-def logo():
-    S = 5  # pixel scale of the font
-    text = 'Still Here'
-    cols = sum(len(GLYPHS[ch][0]) + 1 for ch in text) - 1
-    tw = cols * S
-    layer = new(240, 80)
-    px = layer.load()
-    x0 = (240 - tw) // 2
-    y0 = (80 - 7 * S) // 2   # lettering centred in the 80 px tall logo
+# Chunky uppercase pixel font (9 rows, 2-pixel strokes, clipped corners), in the style of
+# classic arcade title screens. Used for the logo and the START button.
+BIG = {
+    'S': ['.######.', '########', '##......', '#######.', '.#######', '......##', '......##', '########', '.######.'],
+    'T': ['########', '########', '...##...', '...##...', '...##...', '...##...', '...##...', '...##...', '...##...'],
+    'I': ['######', '######', '..##..', '..##..', '..##..', '..##..', '..##..', '######', '######'],
+    'L': ['##.....', '##.....', '##.....', '##.....', '##.....', '##.....', '##.....', '#######', '.######'],
+    'H': ['##....##', '##....##', '##....##', '########', '########', '##....##', '##....##', '##....##', '##....##'],
+    'E': ['.######', '#######', '##.....', '##.....', '######.', '######.', '##.....', '#######', '.######'],
+    'R': ['#######.', '########', '##....##', '##....##', '########', '#######.', '##..##..', '##...##.', '##....##'],
+    'A': ['.######.', '########', '##....##', '##....##', '########', '########', '##....##', '##....##', '##....##'],
+}
+
+
+def big_text(img, word, x0, y0, scale, color):
+    """Draw `word` in the BIG font at scale; returns nothing (pixels written into img)."""
+    px = img.load()
     cx = 0
-    for ch in text:
-        g = GLYPHS[ch]
+    for ch in word:
+        g = BIG[ch]
         for ry, row in enumerate(g):
             for rx, c in enumerate(row):
                 if c == '#':
-                    for yy in range(S):
-                        for xx in range(S):
-                            x, y = x0 + (cx + rx) * S + xx, y0 + ry * S + yy
-                            top = yy < 2 and ry == 0 or (yy == 0)
-                            px[x, y] = P['SPARK'] if yy == 0 else (P['GOLD2'] if yy == S - 1 else P['GOLD1'])
+                    for yy in range(scale):
+                        for xx in range(scale):
+                            px[x0 + (cx + rx) * scale + xx, y0 + ry * scale + yy] = color
         cx += len(g[0]) + 1
-    im = outline(layer, P['OUT'], 1.5)   # 1 px border (diagonals included so corners stay closed)
+
+
+def big_width(word, scale):
+    return (sum(len(BIG[ch][0]) + 1 for ch in word) - 1) * scale
+
+
+def logo():
+    """240x80: STILL over HERE, white chunky letters with a thin dark outline."""
+    S = 4
+    layer = new(240, 80)
+    white = _c('#ffffff')
+    h = 9 * S
+    gap = 4
+    top = (80 - (2 * h + gap)) // 2
+    for k, word in enumerate(('STILL', 'HERE')):
+        big_text(layer, word, (240 - big_width(word, S)) // 2, top + k * (h + gap), S, white)
+    return outline(layer, _c('#140f2e'), 1.5)   # 1 px dark navy border, corners closed
+
+
+def start_button():
+    """120x34 pill: sunset gradient (yellow, orange, pink), dark purple rim, START in purple."""
+    W, H = 120, 34
+    im = new(W, H)
     d = dr(im)
-    # just the lettering and a few sparkles (the little buggy accent was removed on request)
-    sparkle(d, 12, 22, P['SPARK'], True)
-    sparkle(d, 228, 16, P['SPARK'])
-    sparkle(d, 222, 64, P['SPARK'], True)
-    sparkle(d, 18, 62, P['SPARK'])
+    d.rounded_rectangle([0, 0, W - 1, H - 1], radius=14, fill=_c('#2a0d3a'))
+    mask = new(W, H)
+    dr(mask).rounded_rectangle([2, 2, W - 3, H - 3], radius=12, fill=_c('#ffffff'))
+    bands = ['#fff6a6', '#fff6a6', '#ffe14a', '#ffe14a', '#ffe14a', '#ffd23f', '#ffd23f', '#ffc23a', '#ffc23a',
+             '#ffb03a', '#ffb03a', '#ff9a3c', '#ff9a3c', '#ff8846', '#ff8846', '#ff7552', '#ff7552', '#ff6560',
+             '#ff6560', '#ff586e', '#ff586e', '#ff4f7c', '#ff4f7c', '#ff4888', '#ff4888', '#ff4888', '#ff4888',
+             '#e8407e', '#d93a7a', '#d93a7a']
+    px, mk = im.load(), mask.load()
+    for y in range(2, H - 2):
+        col = _c(bands[min(y - 2, len(bands) - 1)])
+        for x in range(W):
+            if mk[x, y][3]:
+                px[x, y] = col
+    d.rectangle([12, 4, 20, 5], fill=_c('#ffffff'))   # small glint, top left
+    S = 2
+    tw = big_width('START', S)
+    big_text(im, 'START', (W - tw) // 2, (H - 9 * S) // 2, S, _c('#5b1260'))
     return im
 
 
@@ -860,6 +900,7 @@ def build():
         'arrow_up': ((96, 96), arrow_button(False)),
         'arrow_down': ((96, 96), arrow_button(True)),
         'logo': ((240, 80), logo()),
+        'start_button': ((120, 34), start_button()),
     }
 
 

@@ -33,11 +33,13 @@ class BootScene extends Phaser.Scene {
 
     this.tweens.killAll();           // stop the loading-screen tweens before clearing it
     this.children.removeAll(true);   // clear the loading bar
-    // Start screen: the cover picture, the logo, open space, then "Tap to start"
+    // Start screen: the cover picture, the logo, open space, then the START button.
+    // The button is the obvious target, but a tap anywhere still starts (no one gets stuck).
     this.add.image(240, 135, 'cover');
-    this.add.image(240, 64, 'logo');
-    const tap = new PixelText(this, 240, 218, 'Tap to start', { size: 20, bold: true, color: '#fff3a0', shadow: '#14141f' });
-    this.tweens.add({ targets: tap, alpha: 0.6, duration: 900, yoyo: true, repeat: -1 });   // slow, well under 3 Hz; stays readable on the busy cover
+    this.add.image(240, 70, 'logo');
+    const btn = this.add.image(240, 212, 'start_button');
+    this.tweens.add({ targets: btn, scale: 1.06, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });   // gentle pulse, well under 3 Hz
+    this.input.once('pointerdown', () => { this.tweens.killTweensOf(btn); btn.setScale(0.94); });   // squish on press
 
     let started = false;
     const go = () => {

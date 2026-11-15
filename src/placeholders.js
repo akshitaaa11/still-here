@@ -30,6 +30,7 @@ const Assets = {
     { key: 'arrow_up', w: 96, h: 96 },
     { key: 'arrow_down', w: 96, h: 96 },
     { key: 'logo', w: 240, h: 80 },
+    { key: 'start_button', w: 120, h: 34 },
     { key: 'cover', w: 480, h: 270 }   // start-screen background (owner supplied)
   ],
 
