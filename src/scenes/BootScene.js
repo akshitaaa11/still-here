@@ -55,5 +55,6 @@ class BootScene extends Phaser.Scene {
     this.input.keyboard.once('keydown-ENTER', go);
   }
 }
-// Where Boot goes next. Phase 4 changes this to 'HomeScene'.
-BootScene.NEXT = 'MoonScene';
+// Where Boot goes next. Until Home exists (Phase 4) it picks the next unfinished chapter
+// so the whole game stays playable. Phase 4 changes this to 'HomeScene'.
+Object.defineProperty(BootScene, 'NEXT', { get: () => (State.hasPatch('moon') && !State.hasPatch('mars') ? 'MarsScene' : 'MoonScene') });

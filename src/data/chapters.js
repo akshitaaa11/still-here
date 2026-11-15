@@ -16,5 +16,31 @@ const CHAPTERS = {
       { cardId: 'laser_mirror', gapSec: 32, sprites: [{ key: 'laser_mirror', dx: 0 }] },
       { cardId: 'rover_sign', gapSec: 33, sprites: [{ key: 'rover_sign', dx: 0 }] }
     ]
+  },
+  mars: {
+    chapter: 'mars', patch: 'mars', battery: true,
+    sky: 'mars_sky', hills: 'mars_hills', ground: 'mars_ground',
+    rover: 'mars_rover', roverScaleKey: 'ROVER_SCALE_MARS', asleep: 'mars_rover_asleep',
+    intro: 'You are driving Opportunity. Hold the arrow to drive. Let go to rest and charge.',
+    lowBattery: 'Low battery, resting...',
+    stormTitle: '14 years later...',
+    windLine: 'Wind cleaned the panels!',
+    // README 9.4 fixed ending text, verbatim, one sentence per line
+    endingLines: [
+      'Opportunity was built to last 90 Mars days.',
+      'It lasted about 14 and a half years.',
+      'In June 2018 a giant dust storm covered the sky.',
+      'Its last message reached Earth on 10 June 2018.',
+      'NASA sent over 1,000 commands.',
+      'Opportunity did not answer.',
+      'Opportunity fell asleep.'
+    ],
+    closingLine: 'It is still there. Still here.',
+    finds: [
+      { cardId: 'landing_platform', gapSec: 30, sprites: [{ key: 'landing_platform', dx: 0 }] },
+      { cardId: 'cone_parachute', gapSec: 32, sprites: [{ key: 'cone', dx: -48 }, { key: 'parachute', dx: 44 }] },
+      { cardId: 'heat_shield', gapSec: 33, sprites: [{ key: 'heat_shield_a', dx: -22 }, { key: 'heat_shield_b', dx: 52 }] },
+      { cardId: 'space_rock', gapSec: 31, sprites: [{ key: 'space_rock', dx: 0 }] }
+    ]
   }
 };

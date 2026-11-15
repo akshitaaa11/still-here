@@ -25,7 +25,10 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
   const boot = async () => {
     await page.waitForFunction(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, null, { timeout: 15000 });
     await click(240, 130);
-    await page.waitForFunction(() => game.scene.isActive('MoonScene'), null, { timeout: 5000 });
+    // until Home exists, Boot goes to the next unfinished chapter; this test wants the Moon
+    await page.waitForFunction(() => game.scene.isActive('MoonScene') || game.scene.isActive('MarsScene'), null, { timeout: 5000 });
+    await page.evaluate(() => { if (game.scene.isActive('MarsScene')) game.scene.getScene('MarsScene').scene.start('MoonScene'); });
+    await page.waitForFunction(() => game.scene.isActive('MoonScene') && game.scene.getScene('MoonScene').topBar, null, { timeout: 5000 });
   };
   const M = () => page.evaluate(() => { const s = game.scene.getScene('MoonScene'); return { state: s.state, worldX: s.worldX, n: State.countChapter('moon') }; });
 
@@ -42,7 +45,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
     await page.keyboard.down('ArrowRight');
     await page.waitForFunction(() => CardPopup.active, null, { timeout: 60000 });
     await page.keyboard.up('ArrowRight');
-    await sleep(3000);
+    await page.waitForFunction(() => CardPopup.ready, null, { timeout: 20000 });
     if (i === 0) await page.screenshot({ path: OUT + 'card1.png' });
     await click(240, 205);
     await page.waitForFunction(() => !CardPopup.active, null, { timeout: 8000 });
@@ -82,7 +85,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
   await page.keyboard.down('ArrowRight');
   await page.waitForFunction(() => CardPopup.active, null, { timeout: 20000 });
   await page.keyboard.up('ArrowRight');
-  await sleep(3000); await click(240, 205);
+  await page.waitForFunction(() => CardPopup.ready, null, { timeout: 20000 }); await click(240, 205);
   await page.waitForFunction(() => !CardPopup.active, null, { timeout: 8000 });
   ok((await M()).n === 5, 'replayed card does not double count');
   ok(await page.evaluate(() => JSON.parse(localStorage.getItem('stillHere')).patches.length) === 1, 'patches not duplicated');

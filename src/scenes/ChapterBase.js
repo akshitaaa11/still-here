@@ -103,7 +103,7 @@ class ChapterBase extends Phaser.Scene {
     this.layout();
 
     // Wheels turn only while moving
-    if (this.speed > 3) {
+    if (this.speed > 3 && !this.roverStill) {
       this.frameT += dt;
       if (this.frameT >= K.WHEEL_FRAME_SEC) { this.frameT = 0; this.frameIdx = (this.frameIdx + 1) % 4; this.rover.setFrame(this.frameIdx); }
     }
@@ -124,10 +124,16 @@ class ChapterBase extends Phaser.Scene {
 
   // Patch, then (on the second patch) the golden Still Here patch, then a Continue button.
   // Replays are fine: awarding a patch twice changes nothing.
-  async finishChapter(patch) {
+  async finishChapter(patch, closingLine) {
     AudioSys.stopLoops();
     State.awardPatch(patch);
     let shown = await PatchAnim.play(this, patch);
+    if (closingLine) {   // stays on screen through the golden patch too
+      const line = new PixelText(this, 240, 218, closingLine, { size: 12, bold: true, color: '#fff3a0', shadow: '#14141f' })
+        .setDepth(115).setAlpha(0);
+      await Fx.tween(this, { targets: line, alpha: 1, duration: 600 });
+      await Fx.wait(this, 1500);
+    }
     let gold = false;
     if (State.hasPatch('moon') && State.hasPatch('mars') && !State.hasPatch('gold')) {
       State.awardPatch('gold');
@@ -138,7 +144,7 @@ class ChapterBase extends Phaser.Scene {
     }
     await Fx.wait(this, 500);
     await new Promise(res => {
-      new Button(this, 240, 238, 'Continue', res, { w: 110, h: 26, size: 12 }).setDepth(120);
+      new Button(this, 240, closingLine ? 250 : 238, 'Continue', res, { w: 110, h: closingLine ? 22 : 26, size: 12 }).setDepth(120);
     });
     this.leave(gold ? 'AlbumHallScene' : 'HomeScene');
   }

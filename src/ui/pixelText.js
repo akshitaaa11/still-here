@@ -7,6 +7,7 @@ class PixelText extends Phaser.GameObjects.Image {
     const key = PixelText.render(scene, String(text), o);
     super(scene, x, y, key);
     this.o = o;
+    this.str = String(text);   // what it says (handy for tests and debugging)
     this.pxKey = key;
     this.tm = scene.textures;
     this.setOrigin(o.originX != null ? o.originX : 0.5, o.originY != null ? o.originY : 0.5);
@@ -15,6 +16,7 @@ class PixelText extends Phaser.GameObjects.Image {
 
   setString(text) {
     const old = this.pxKey;
+    this.str = String(text);
     this.pxKey = PixelText.render(this.scene, String(text), this.o);
     this.setTexture(this.pxKey);
     if (this.tm.exists(old)) this.tm.remove(old);

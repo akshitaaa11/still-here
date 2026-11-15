@@ -12,7 +12,7 @@
     audio: { noAudio: true },          // we use our own Web Audio (audio.js)
     input: { activePointers: 3 },      // multi-touch: drive with one thumb while tapping with another
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MoonScene]
+    scene: [BootScene, MoonScene, MarsScene]
   };
   window.game = new Phaser.Game(config);
 

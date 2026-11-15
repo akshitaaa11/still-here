@@ -2,6 +2,7 @@
 // Only the "Collect it!" button collects, and it only wakes up after the text reveal ends.
 const CardPopup = {
   active: false,
+  ready: false,      // true only while "Collect it!" can be tapped
 
   // Resolves after the Collect animation ends. opts: { slotIndex, topBar, target }
   // `target` is the world sprite(s) to make glow when found.
@@ -65,12 +66,14 @@ const CardPopup = {
 
     // Step 6: the Collect button wakes up and pulses softly
     btn.setEnabled(true);
+    this.ready = true;
     scene.tweens.add({ targets: btn.visual, alpha: 1, duration: 150 });
     btn.pulse(true);
 
     // Wait for the one thing that can collect
     let onCollect;
     await new Promise(res => { onCollect = () => { collecting = true; res(); }; });
+    this.ready = false;
     btn.pulse(false);
     btn.setEnabled(false);
 

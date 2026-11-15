@@ -7,16 +7,18 @@ const Controls = (() => {
   let arrowImg = null, glowTween = null;
 
   const DRIVE_KEYS = ['ArrowRight', 'KeyD'];
-  const clearAll = () => { keys.clear(); pointers.clear(); };
+  const clearAll = () => { keys.clear(); pointers.clear(); blocked = false; };
+  // A real release ends the "press again" block at once, even if it is re-pressed in the same frame
+  const released = () => { if (!keys.size && !pointers.size) blocked = false; };
 
   window.addEventListener('keydown', e => {
     if (DRIVE_KEYS.includes(e.code)) { keys.add(e.code); e.preventDefault(); }
   });
-  window.addEventListener('keyup', e => { keys.delete(e.code); });
+  window.addEventListener('keyup', e => { keys.delete(e.code); released(); });
   window.addEventListener('blur', clearAll);
-  window.addEventListener('mouseup', () => pointers.clear());
-  window.addEventListener('touchcancel', () => pointers.clear());
-  window.addEventListener('touchend', e => { if (!e.touches || e.touches.length === 0) pointers.clear(); });
+  window.addEventListener('mouseup', () => { pointers.clear(); released(); });
+  window.addEventListener('touchcancel', () => { pointers.clear(); released(); });
+  window.addEventListener('touchend', e => { if (!e.touches || e.touches.length === 0) { pointers.clear(); released(); } });
   document.addEventListener('visibilitychange', clearAll);
 
   return {
@@ -36,7 +38,7 @@ const Controls = (() => {
       // Hit area bigger than the picture: at least 44 CSS px on any screen
       const hit = scene.add.zone(x, y, 76, 76).setDepth(61).setInteractive();
       const down = p => { pointers.add(p.id); img.setTexture('arrow_down'); };
-      const upAny = p => { pointers.delete(p.id); if (!pointers.size) img.setTexture('arrow_up'); };
+      const upAny = p => { pointers.delete(p.id); released(); if (!pointers.size) img.setTexture('arrow_up'); };
       hit.on('pointerdown', down);
       hit.on('pointerup', upAny);
       hit.on('pointerout', upAny);
