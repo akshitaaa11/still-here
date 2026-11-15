@@ -811,7 +811,7 @@ def logo():
                             top = yy < 2 and ry == 0 or (yy == 0)
                             px[x, y] = P['SPARK'] if yy == 0 else (P['GOLD2'] if yy == S - 1 else P['GOLD1'])
         cx += len(g[0]) + 1
-    im = outline(layer, P['OUT'], 2.2)
+    im = outline(layer, P['OUT'], 1.5)   # 1 px border (diagonals included so corners stay closed)
     d = dr(im)
     # just the lettering and a few sparkles (the little buggy accent was removed on request)
     sparkle(d, 12, 22, P['SPARK'], True)

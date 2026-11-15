@@ -36,7 +36,7 @@ class BootScene extends Phaser.Scene {
     // Start screen: the cover picture, the logo, open space, then "Tap to start"
     this.add.image(240, 135, 'cover');
     this.add.image(240, 64, 'logo');
-    const tap = new PixelText(this, 240, 218, 'Tap to start', { size: 16, bold: true, color: '#fff3a0', shadow: '#14141f' });
+    const tap = new PixelText(this, 240, 218, 'Tap to start', { size: 20, bold: true, color: '#fff3a0', shadow: '#14141f' });
     this.tweens.add({ targets: tap, alpha: 0.6, duration: 900, yoyo: true, repeat: -1 });   // slow, well under 3 Hz; stays readable on the busy cover
 
     let started = false;
