@@ -29,7 +29,8 @@ const Assets = {
     { key: 'patch_gold', w: 64, h: 64 },
     { key: 'arrow_up', w: 96, h: 96 },
     { key: 'arrow_down', w: 96, h: 96 },
-    { key: 'logo', w: 240, h: 80 }
+    { key: 'logo', w: 240, h: 80 },
+    { key: 'cover', w: 480, h: 270 }   // start-screen background (owner supplied)
   ],
 
   // Run once after loading: placeholders for anything missing, then strip frames

@@ -33,12 +33,11 @@ class BootScene extends Phaser.Scene {
 
     this.tweens.killAll();           // stop the loading-screen tweens before clearing it
     this.children.removeAll(true);   // clear the loading bar
-    this.add.image(240, 56, 'logo');
-    const sun = this.add.image(240, 130, 'sun');
-    this.tweens.add({ targets: sun, scale: 1.12, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    this.add.sprite(240, 196, 'mars_rover', 0).setOrigin(0.5, 1).setScale(3);
+    // Start screen: the cover picture, the logo, open space, then "Tap to start"
+    this.add.image(240, 135, 'cover');
+    this.add.image(240, 64, 'logo');
     const tap = new PixelText(this, 240, 236, 'Tap to start', { size: 16, bold: true, color: '#fff3a0', shadow: '#14141f' });
-    this.tweens.add({ targets: tap, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });   // slow, well under 3 Hz
+    this.tweens.add({ targets: tap, alpha: 0.6, duration: 900, yoyo: true, repeat: -1 });   // slow, well under 3 Hz; stays readable on the busy cover
 
     let started = false;
     const go = () => {
@@ -53,6 +52,7 @@ class BootScene extends Phaser.Scene {
     this.input.once('pointerup', go);   // pointerup counts as a gesture on iOS too
     this.input.keyboard.once('keydown-SPACE', go);
     this.input.keyboard.once('keydown-ENTER', go);
+    this.ready = true;   // the start screen is up and listening for the tap
   }
 }
 BootScene.NEXT = 'HomeScene';

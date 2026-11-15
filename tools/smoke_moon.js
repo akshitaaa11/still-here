@@ -23,7 +23,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
   }, [gx, gy]);
   const click = async (gx, gy) => { const p = await toPage(gx, gy); await page.mouse.click(p.x, p.y); };
   const boot = async () => {
-    await page.waitForFunction(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, null, { timeout: 15000 });
+    await page.waitForFunction(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').ready, null, { timeout: 15000 });
     await click(240, 130);
     // until Home exists, Boot goes to the next unfinished chapter; this test wants the Moon
     await page.waitForFunction(() => game.scene.isActive('HomeScene'), null, { timeout: 5000 });

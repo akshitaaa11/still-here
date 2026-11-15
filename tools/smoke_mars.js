@@ -29,7 +29,7 @@ const ENDING = 'Opportunity was built to last 90 Mars days. It lasted about 14 a
   const waitFor = (fn, ms, arg) => page.waitForFunction(fn, arg, { timeout: ms });
   const startMars = async (save) => {
     await page.goto('http://localhost:8080/' + (DEMO ? '?demo=1' : ''));
-    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, 15000);
+    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').ready, 15000);
     await page.evaluate(s => { localStorage.setItem('stillHere', JSON.stringify(s)); State.load(); }, save);
     await click(240, 130);
     await waitFor(() => game.scene.isActive('HomeScene'), 5000);

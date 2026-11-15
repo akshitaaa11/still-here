@@ -20,7 +20,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
   const waitFor = (fn, ms = 8000, arg) => page.waitForFunction(fn, arg, { timeout: ms });
   const start = async save => {
     await page.goto('http://localhost:8080/');
-    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, 15000);
+    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').ready, 15000);
     if (save) await page.evaluate(s => { localStorage.setItem('stillHere', JSON.stringify(s)); State.load(); }, save);
     await click(240, 130);
     await waitFor(() => game.scene.isActive('HomeScene'));

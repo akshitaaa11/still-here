@@ -26,7 +26,7 @@ async function session(browser, opts = {}) {
   const waitFor = (fn, ms = 10000, arg) => page.waitForFunction(fn, arg, { timeout: ms });
   const boot = async () => {
     await page.goto('http://localhost:8080/' + (DEMO ? '?demo=1' : ''));
-    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, 20000);
+    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').ready, 20000);
     await click(240, 130);
     await waitFor(() => game.scene.isActive('HomeScene'));
     await sleep(900);
@@ -165,7 +165,7 @@ async function session(browser, opts = {}) {
   await click(132, 240);   // Sound -> OFF
   await sleep(300);
   await page.reload();
-  await page.waitForFunction(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, null, { timeout: 20000 });
+  await page.waitForFunction(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').ready, null, { timeout: 20000 });
   await click(240, 130);
   await waitFor(() => game.scene.isActive('HomeScene'));
   await sleep(900);

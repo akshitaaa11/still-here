@@ -33,7 +33,7 @@ const PHONES = [
     const shot = n => page.screenshot({ path: `${OUT}${ph.name}_${n}.png` });
 
     await page.goto('http://localhost:8080/');
-    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').children.list.length > 3, 15000);
+    await waitFor(() => window.game && game.scene.isActive('BootScene') && game.scene.getScene('BootScene').ready, 15000);
     await page.evaluate(() => { localStorage.clear(); State.load(); });
 
     // page setup: no zoom, no scroll, no selection, no callout
