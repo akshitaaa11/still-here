@@ -14,6 +14,7 @@ class AlbumHallScene extends Phaser.Scene {
   }
 
   create() {
+    Fx.fitCamera(this);
     Fx.ensure(this);
     this.cameras.main.fadeIn(250);
     this.add.rectangle(240, 135, K.GAME_W, K.GAME_H, 0x0b0b1a);

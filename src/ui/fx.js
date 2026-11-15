@@ -20,6 +20,10 @@ const Fx = {
       }
     }
   },
+  // Every scene draws in 480x270 units on the 960x540 canvas (see K.ZOOM)
+  fitCamera(scene) {
+    scene.cameras.main.setZoom(K.ZOOM).centerOn(K.GAME_W / 2, K.GAME_H / 2);
+  },
   // Invisible tap target. Not a Zone: Phaser picks the top-most hit using the camera's
   // render list, and Zones are never rendered, so a Zone always loses to anything drawn
   // under it (e.g. a dark overlay). A rectangle with zero fill alpha is "rendered".

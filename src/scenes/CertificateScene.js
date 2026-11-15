@@ -3,6 +3,7 @@ class CertificateScene extends Phaser.Scene {
   constructor() { super('CertificateScene'); }
 
   create() {
+    Fx.fitCamera(this);
     if (!(State.hasPatch('moon') && State.hasPatch('mars'))) { this.scene.start('HomeScene'); return; }
     this.cameras.main.fadeIn(250);
     this.add.rectangle(240, 135, K.GAME_W, K.GAME_H, 0x0b0b1a);

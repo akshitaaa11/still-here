@@ -4,21 +4,23 @@
 const CHAPTERS = {
   moon: {
     chapter: 'moon', patch: 'moon',
-    sky: 'moon_sky', ground: 'moon_ground',
-    // moving scenery built from the owner's Moon picture (tools/build_moon_art.py):
-    // mountain pieces and craters/rocks, reused at random sizes so nothing visibly repeats
-    mountains: ['moon_mtn_1', 'moon_mtn_2', 'moon_mtn_3', 'moon_mtn_4'],
+    sky: 'moon_sky',
+    // The owner's Moon picture (tools/build_moon_art.py), stored at canvas resolution (scale 0.5):
+    // the whole mountain range and its mirror image scroll slowly; the ground scrolls at full
+    // speed with craters and rocks scattered at random sizes, so nothing repeats the same way.
+    mountains: ['moon_mtn_a', 'moon_mtn_b'], groundStrip: 'moon_ground', artScale: 0.5,
     decor: ['moon_decor_1', 'moon_decor_2', 'moon_decor_3', 'moon_decor_4', 'moon_decor_5'],
+    baseY: 252, stopDist: 150,             // bigger rover and finds stand lower on the bigger ground
     rover: 'moon_buggy', roverScaleKey: 'ROVER_SCALE_MOON',
     intro: 'You are driving the Apollo 15 rover. Hold the arrow to drive!',
     bounceFact: 'Real rover wheels sometimes left the ground in low gravity.',
     endingLine: 'You parked it. It is still there.',
     finds: [
-      { cardId: 'landing_stage', gapSec: 31, sprites: [{ key: 'landing_stage', dx: 0 }] },
-      { cardId: 'flag', gapSec: 33, sprites: [{ key: 'flag', dx: 0 }] },
-      { cardId: 'science_station', gapSec: 34, sprites: [{ key: 'science_station', dx: 0 }] },
-      { cardId: 'laser_mirror', gapSec: 32, sprites: [{ key: 'laser_mirror', dx: 0 }] },
-      { cardId: 'rover_sign', gapSec: 33, sprites: [{ key: 'rover_sign', dx: 0 }] }
+      { cardId: 'landing_stage', gapSec: 31, sprites: [{ key: 'landing_stage', dx: 0, scale: 1.5 }] },
+      { cardId: 'flag', gapSec: 33, sprites: [{ key: 'flag', dx: 0, scale: 2 }] },
+      { cardId: 'science_station', gapSec: 34, sprites: [{ key: 'science_station', dx: 0, scale: 1.5 }] },
+      { cardId: 'laser_mirror', gapSec: 32, sprites: [{ key: 'laser_mirror', dx: 0, scale: 2 }] },
+      { cardId: 'rover_sign', gapSec: 33, sprites: [{ key: 'rover_sign', dx: 0, scale: 2 }] }
     ]
   },
   mars: {

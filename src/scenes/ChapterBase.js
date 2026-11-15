@@ -15,17 +15,22 @@ class ChapterBase extends Phaser.Scene {
   onChapterComplete() {}       // hook: the last find was collected
 
   create() {
+    Fx.fitCamera(this);
     const c = this.cfg = this.getConfig();
     this.worldX = 0; this.speed = 0; this.state = 'IDLE';
     this.frameT = 0; this.frameIdx = 0;
     Fx.ensure(this);
 
     // Parallax: sky fixed, hills slow, ground at full speed
-    this.add.image(0, 0, c.sky).setOrigin(0, 0).setDepth(0);
+    this.baseY = c.baseY || K.ROVER_BASE_Y;          // where the rover's wheels and the finds stand
+    this.add.image(0, 0, c.sky).setOrigin(0, 0).setDisplaySize(K.GAME_W, K.GAME_H).setDepth(0);
     // (a chapter can leave `hills` out and build its own moving scenery in buildWorld)
     if (c.hills) this.hills = this.add.tileSprite(0, 0, K.GAME_W, K.GAME_H, c.hills).setOrigin(0, 0).setDepth(1);
-    const gh = this.textures.get(c.ground).getSourceImage().height;   // ground sits on the bottom edge
-    this.ground = this.add.tileSprite(0, K.GAME_H - gh, K.GAME_W, gh, c.ground).setOrigin(0, 0).setDepth(2);
+    // (a chapter can also leave `ground` out and scroll its own, see MoonScene)
+    if (c.ground) {
+      const gh = this.textures.get(c.ground).getSourceImage().height;   // ground sits on the bottom edge
+      this.ground = this.add.tileSprite(0, K.GAME_H - gh, K.GAME_W, gh, c.ground).setOrigin(0, 0).setDepth(2);
+    }
     this.buildWorld();
 
     // Finds come from config (positions) and cards.json (text); nothing is hard-coded here.
@@ -34,10 +39,10 @@ class ChapterBase extends Phaser.Scene {
     this.finds = c.finds.map((f, i) => ({
       def: f, index: i, triggered: false,
       x: (acc += (DEMO ? K.DEMO_FIND_SPACING_SEC : (f.gapSec || K.FIND_SPACING_SEC)) * K.DRIVE_SPEED),
-      sprites: f.sprites.map(s => ({ dx: s.dx || 0, img: this.add.image(0, K.ROVER_BASE_Y, s.key).setOrigin(0.5, 1).setDepth(5) }))
+      sprites: f.sprites.map(s => ({ dx: s.dx || 0, img: this.add.image(0, this.baseY, s.key).setOrigin(0.5, 1).setScale(s.scale || 1).setDepth(5) }))
     }));
 
-    this.rover = this.add.sprite(K.ROVER_SCREEN_X, K.ROVER_BASE_Y, c.rover, 0).setOrigin(0.5, 1).setScale(K[c.roverScaleKey] || 3).setDepth(10);
+    this.rover = this.add.sprite(K.ROVER_SCREEN_X, this.baseY, c.rover, 0).setOrigin(0.5, 1).setScale(K[c.roverScaleKey] || 3).setDepth(10);
 
     this.topBar = new TopBar(this, { chapter: c.chapter, battery: !!c.battery });
     Controls.attachArrow(this);
@@ -95,13 +100,13 @@ class ChapterBase extends Phaser.Scene {
 
     // A find triggers a little before the rover would reach it, so it stops right at the item
     if (this.state === 'DRIVING') {
-      const f = this.finds.find(x => !x.triggered && this.worldX >= x.x - K.STOP_DIST - K.DRIVE_SPEED * K.DECEL_SEC / 2);
+      const f = this.finds.find(x => !x.triggered && this.worldX >= x.x - (this.cfg.stopDist || K.STOP_DIST) - K.DRIVE_SPEED * K.DECEL_SEC / 2);
       if (f) this.beginFind(f);
     }
 
     // Parallax scroll (whole pixels so nothing shimmers)
     if (this.hills) this.hills.tilePositionX = Math.round(this.worldX * K.PARALLAX_HILLS);
-    this.ground.tilePositionX = Math.round(this.worldX * K.PARALLAX_GROUND);
+    if (this.ground) this.ground.tilePositionX = Math.round(this.worldX * K.PARALLAX_GROUND);
     this.layout();
 
     // Wheels turn only while moving

@@ -38,3 +38,32 @@ class ScrollLane {
     }
   }
 }
+
+// A seamless band that scrolls with the world: its pictures are laid side by side in order and
+// repeat as a cycle (e.g. the mountain range, then the same range mirrored, so every join
+// matches). Nothing is cut or stretched: each picture keeps its true shape.
+//   o: { keys, factor (parallax), scale, y, originY, depth }
+class WrapStrip {
+  constructor(scene, o) {
+    this.o = o;
+    const ws = o.keys.map(k => scene.textures.get(k).getSourceImage().width * o.scale);
+    this.period = ws.reduce((a, b) => a + b, 0);
+    const cycles = Math.ceil((K.GAME_W + this.period) / this.period) + 1;
+    this.imgs = [];
+    for (let c = 0; c < cycles; c++) {
+      o.keys.forEach((k, i) => {
+        const img = scene.add.image(0, o.y, k).setOrigin(0, o.originY).setScale(o.scale).setDepth(o.depth);
+        this.imgs.push({ img, w: ws[i] });
+      });
+    }
+  }
+
+  update(worldX) {
+    const lx = worldX * this.o.factor;
+    let x = -(((lx % this.period) + this.period) % this.period);
+    for (const it of this.imgs) {
+      it.img.x = Math.round(x * K.ZOOM) / K.ZOOM;   // whole canvas pixels: crisp and smooth
+      x += it.w;
+    }
+  }
+}

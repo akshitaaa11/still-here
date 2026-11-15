@@ -67,11 +67,15 @@ const ENDING = 'Opportunity was built to last 90 Mars days. It lasted about 14 a
   ok((await S()).battery === 100, 'battery starts full');
   // drain: hold until battery runs out -> RECHARGING (no game over)
   await page.evaluate(() => { game.scene.getScene('MarsScene').battery = 6; });
-  await hold(true); await sleep(1800);
+  await hold(true);
+  // wait for the battery to run out (game time, not a fixed real-time sleep: slow headless
+  // rendering makes game time run behind the wall clock)
+  await waitFor(() => game.scene.getScene('MarsScene').state === 'RECHARGING', 10000).catch(() => {});
   let s = await S();
   ok(s.state === 'RECHARGING', `battery 0 while driving -> RECHARGING (battery ${s.battery.toFixed(1)})`);
   ok(await page.evaluate(() => !!game.scene.getScene('MarsScene').lowText && game.scene.getScene('MarsScene').lowText.str === 'Low battery, resting...'), '"Low battery, resting..." shown');
-  const wx = s.worldX; await sleep(1500);
+  await sleep(400);   // let it roll to a stop first
+  const wx = (await S()).worldX; await sleep(1500);
   ok(Math.abs((await S()).worldX - wx) < 1, 'input ignored while recharging (arrow still held)');
   await waitFor(() => game.scene.getScene('MarsScene').state !== 'RECHARGING', 12000);
   s = await S();

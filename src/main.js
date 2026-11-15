@@ -3,8 +3,8 @@
   const config = {
     type: Phaser.AUTO,
     parent: 'game',
-    width: K.GAME_W,
-    height: K.GAME_H,
+    width: K.GAME_W * K.ZOOM,
+    height: K.GAME_H * K.ZOOM,
     backgroundColor: '#000000',
     pixelArt: true,
     roundPixels: true,

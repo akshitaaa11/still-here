@@ -4,6 +4,7 @@ class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
 
   preload() {
+    Fx.fitCamera(this);
     this.failed = new Set();
     // The real sun is not loaded yet, so a code-drawn one pulses while we load
     this.sunG = this.add.graphics().setPosition(240, 96);

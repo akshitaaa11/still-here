@@ -51,7 +51,7 @@ class Button {
   fitHit() {
     if (!this.zone || !this.zone.scene) return;   // already destroyed
     const ds = this.scene.scale.displayScale ? this.scene.scale.displayScale.x : 1;
-    const min = 44 * (ds || 1);
+    const min = 44 * (ds || 1) / K.ZOOM;   // canvas px -> game units
     Fx.resizeHit(this.zone, Math.max(this.w, min), Math.max(this.h, min));
   }
 

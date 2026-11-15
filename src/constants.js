@@ -3,6 +3,10 @@
 const K = Object.freeze({
   GAME_W: 480,
   GAME_H: 270,
+  // The game is laid out in 480x270 units but drawn on a 960x540 canvas (camera zoom 2): the
+  // generated art looks exactly the same (each art pixel = 2x2), while the owner's detailed
+  // pictures (Moon landscape, rover) keep twice the detail.
+  ZOOM: 2,
   ROVER_SCREEN_X: 140,      // rover stays here, the world scrolls
   DRIVE_SPEED: 60,          // px/s, both chapters
   FIND_SPACING_SEC: 32,     // 30-35 s of driving between finds
@@ -33,7 +37,7 @@ const K = Object.freeze({
   // World layout (shared by both chapters)
   GROUND_Y: 206,            // top of the ground strip (ground art is 64 px tall)
   ROVER_BASE_Y: 236,        // rover wheels and finds stand on this y
-  ROVER_SCALE_MOON: 1,      // the owner's rover art is already full size (72x44 frames)
+  ROVER_SCALE_MOON: 0.5,    // the owner's rover is stored at canvas resolution (2 px per game unit)
   ROVER_SCALE_MARS: 3,
   STOP_DIST: 90,            // rover stops this far (px of world) before a find
   DECEL_SEC: 0.5,           // rover slows to a stop by itself

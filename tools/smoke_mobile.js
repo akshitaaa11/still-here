@@ -60,7 +60,7 @@ const PHONES = [
       const ds = game.scale.displayScale.x, out = [];
       for (const s of game.scene.getScenes(true)) for (const o of s.children.list) {
         if (o.input && o.type === 'Rectangle' && o.fillAlpha === 0 && o.width < K.GAME_W) {
-          const w = o.width / ds, h = o.height / ds;
+          const w = o.width * K.ZOOM / ds, h = o.height * K.ZOOM / ds;
           if (w < 43.9 || h < 43.9) out.push(`${s.sys.settings.key} ${o.x},${o.y} ${w.toFixed(0)}x${h.toFixed(0)}`);
         }
       }
@@ -139,7 +139,7 @@ const PHONES = [
       const ds = game.scale.displayScale.x, out = [];
       for (const o of game.scene.getScene('AlbumHallScene').children.list) {
         if (o.input && o.type === 'Rectangle' && o.fillAlpha === 0 && o.width < K.GAME_W && o.visible) {
-          const w = o.width / ds, h = o.height / ds;
+          const w = o.width * K.ZOOM / ds, h = o.height * K.ZOOM / ds;
           if (w < 43.9 || h < 43.9) out.push(`${o.x},${o.y} ${w.toFixed(0)}x${h.toFixed(0)}`);
         }
       }

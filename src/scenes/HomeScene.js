@@ -4,6 +4,7 @@ class HomeScene extends Phaser.Scene {
   constructor() { super('HomeScene'); }
 
   create() {
+    Fx.fitCamera(this);
     Fx.ensure(this);
     this.leaving = false;
     this.cameras.main.fadeIn(250);
