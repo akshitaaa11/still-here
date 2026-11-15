@@ -3,7 +3,7 @@
 // exact size is generated so the game never crashes. Strips get 4 frames of imageWidth / 4.
 const Assets = {
   MANIFEST: [
-    { key: 'moon_buggy', w: 64, h: 40, strip: true },
+    { key: 'moon_buggy', w: 288, h: 44, strip: true },   // owner's rover, 4 frames of 72x44
     { key: 'mars_rover', w: 56, h: 40, strip: true },
     { key: 'mars_rover_asleep', w: 56, h: 40 },
     { key: 'landing_stage', w: 96, h: 80 },
@@ -19,8 +19,16 @@ const Assets = {
     { key: 'space_rock', w: 24, h: 20 },
     { key: 'sun', w: 48, h: 48 },
     { key: 'moon_sky', w: 480, h: 270 },
-    { key: 'moon_hills', w: 960, h: 270 },
-    { key: 'moon_ground', w: 480, h: 64 },
+    { key: 'moon_ground', w: 480, h: 50 },
+    { key: 'moon_mtn_1', w: 168, h: 64 },
+    { key: 'moon_mtn_2', w: 123, h: 54 },
+    { key: 'moon_mtn_3', w: 96, h: 48 },
+    { key: 'moon_mtn_4', w: 93, h: 53 },
+    { key: 'moon_decor_1', w: 101, h: 19 },
+    { key: 'moon_decor_2', w: 62, h: 19 },
+    { key: 'moon_decor_3', w: 47, h: 15 },
+    { key: 'moon_decor_4', w: 58, h: 11 },
+    { key: 'moon_decor_5', w: 30, h: 12 },
     { key: 'mars_sky', w: 480, h: 270 },
     { key: 'mars_hills', w: 960, h: 270 },
     { key: 'mars_ground', w: 480, h: 64 },

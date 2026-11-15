@@ -1,6 +1,6 @@
 // Shared base for both chapters (README 5.4, 9.3, 9.4). A subclass only provides getConfig(),
 // normally an entry of CHAPTERS (src/data/chapters.js):
-//   { chapter, patch, sky, hills, ground, rover, roverScaleKey, intro, battery?,
+//   { chapter, patch, sky, hills?, ground, rover, roverScaleKey, intro, battery?,
 //     finds: [{ cardId, gapSec, sprites: [{ key, dx }] }] }
 // The rover stays at ROVER_SCREEN_X; the world scrolls past it.
 // States: IDLE <-> DRIVING, then FINDING (input ignored) until the card is collected.
@@ -22,8 +22,10 @@ class ChapterBase extends Phaser.Scene {
 
     // Parallax: sky fixed, hills slow, ground at full speed
     this.add.image(0, 0, c.sky).setOrigin(0, 0).setDepth(0);
-    this.hills = this.add.tileSprite(0, 0, K.GAME_W, K.GAME_H, c.hills).setOrigin(0, 0).setDepth(1);
-    this.ground = this.add.tileSprite(0, K.GROUND_Y, K.GAME_W, 64, c.ground).setOrigin(0, 0).setDepth(2);
+    // (a chapter can leave `hills` out and build its own moving scenery in buildWorld)
+    if (c.hills) this.hills = this.add.tileSprite(0, 0, K.GAME_W, K.GAME_H, c.hills).setOrigin(0, 0).setDepth(1);
+    const gh = this.textures.get(c.ground).getSourceImage().height;   // ground sits on the bottom edge
+    this.ground = this.add.tileSprite(0, K.GAME_H - gh, K.GAME_W, gh, c.ground).setOrigin(0, 0).setDepth(2);
     this.buildWorld();
 
     // Finds come from config (positions) and cards.json (text); nothing is hard-coded here.
@@ -98,7 +100,7 @@ class ChapterBase extends Phaser.Scene {
     }
 
     // Parallax scroll (whole pixels so nothing shimmers)
-    this.hills.tilePositionX = Math.round(this.worldX * K.PARALLAX_HILLS);
+    if (this.hills) this.hills.tilePositionX = Math.round(this.worldX * K.PARALLAX_HILLS);
     this.ground.tilePositionX = Math.round(this.worldX * K.PARALLAX_GROUND);
     this.layout();
 

@@ -4,7 +4,11 @@
 const CHAPTERS = {
   moon: {
     chapter: 'moon', patch: 'moon',
-    sky: 'moon_sky', hills: 'moon_hills', ground: 'moon_ground',
+    sky: 'moon_sky', ground: 'moon_ground',
+    // moving scenery built from the owner's Moon picture (tools/build_moon_art.py):
+    // mountain pieces and craters/rocks, reused at random sizes so nothing visibly repeats
+    mountains: ['moon_mtn_1', 'moon_mtn_2', 'moon_mtn_3', 'moon_mtn_4'],
+    decor: ['moon_decor_1', 'moon_decor_2', 'moon_decor_3', 'moon_decor_4', 'moon_decor_5'],
     rover: 'moon_buggy', roverScaleKey: 'ROVER_SCALE_MOON',
     intro: 'You are driving the Apollo 15 rover. Hold the arrow to drive!',
     bounceFact: 'Real rover wheels sometimes left the ground in low gravity.',

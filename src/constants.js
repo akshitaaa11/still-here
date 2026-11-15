@@ -33,7 +33,7 @@ const K = Object.freeze({
   // World layout (shared by both chapters)
   GROUND_Y: 206,            // top of the ground strip (ground art is 64 px tall)
   ROVER_BASE_Y: 236,        // rover wheels and finds stand on this y
-  ROVER_SCALE_MOON: 3,      // integer scales keep pixels crisp
+  ROVER_SCALE_MOON: 1,      // the owner's rover art is already full size (72x44 frames)
   ROVER_SCALE_MARS: 3,
   STOP_DIST: 90,            // rover stops this far (px of world) before a find
   DECEL_SEC: 0.5,           // rover slows to a stop by itself
