@@ -15,6 +15,7 @@ const PatchAnim = {
     await Fx.tween(scene, { targets: p, y: 112, duration: 750, ease: 'Bounce.easeOut' });
     p.angle = 0;
     AudioSys.play('patch_fanfare');
+    Haptics.patch();
     Fx.burst(scene, 240, 112, name === 'gold' ? 30 : 20, { depth: 113 });
     if (name === 'gold') {   // a slow golden glow, well under 3 Hz
       scene.tweens.add({ targets: p, scale: 2.12, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });

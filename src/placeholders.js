@@ -45,8 +45,8 @@ const Assets = {
     { key: 'start_button', w: 104, h: 30 },
     { key: 'planet_moon', w: 208, h: 208 },
     { key: 'planet_mars', w: 208, h: 208 },
-    { key: 'planet_glow_moon', w: 240, h: 240 },
-    { key: 'planet_glow_mars', w: 240, h: 240 },
+    { key: 'planet_glow_moon', w: 300, h: 300 },
+    { key: 'planet_glow_mars', w: 300, h: 300 },
     { key: 'cover', w: 480, h: 270 }   // start-screen background (owner supplied)
   ],
 

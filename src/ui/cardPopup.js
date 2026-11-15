@@ -19,6 +19,7 @@ const CardPopup = {
 
     // Step 2: the item glows and sparkles with a short ding (0.6 s)
     AudioSys.play('sparkle');
+    Haptics.find();
     const t0 = targets[0];
     Fx.burst(scene, t0 ? t0.x : 240, t0 ? t0.y - t0.displayHeight / 2 : 130, 14, { depth: 95 });
     targets.forEach(t => t.setTint && t.setTint(0xfff3a0));
@@ -80,6 +81,7 @@ const CardPopup = {
 
     // Collect animation: card shrinks and flies in an arc to its top-bar slot (0.7 s)
     AudioSys.play('collect');
+    Haptics.collect();
     const dest = topBar ? topBar.getSlotPosition(slotIndex) : { x: 20, y: 14 };
     const p0 = { x: cardObj.x, y: cardObj.y }, c = { x: (p0.x + dest.x) / 2 + 40, y: Math.min(p0.y, dest.y) - 50 };
     const trail = scene.time.addEvent({ delay: 40, loop: true, callback: () => Fx.trail(scene, cardObj.x, cardObj.y, 150) });

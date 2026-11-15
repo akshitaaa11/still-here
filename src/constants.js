@@ -9,7 +9,7 @@ const K = Object.freeze({
   ZOOM: 2,
   ROVER_SCREEN_X: 140,      // rover stays here, the world scrolls
   DRIVE_SPEED: 60,          // px/s, both chapters
-  FIND_SPACING_SEC: 32,     // 30-35 s of driving between finds
+  FIND_SPACING_SEC: 13,     // default seconds of driving between finds (chapters set their own)
   PARALLAX_SKY: 0.0,
   PARALLAX_HILLS: 0.25,
   PARALLAX_GROUND: 1.0,

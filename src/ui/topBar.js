@@ -65,7 +65,8 @@ class TopBar {
   async setCounter(n, total, animate = true) {
     this.counter.setString(`${n} / ${total}`);
     if (!animate) return;
-    this.counter.setScale(1.5);
-    await Fx.tween(this.scene, { targets: this.counter, scaleX: 1, scaleY: 1, duration: 300, ease: 'Back.easeOut' });
+    const b = this.counter.baseScale;   // text is drawn at canvas resolution (see PixelText)
+    this.counter.setScale(1.5 * b);
+    await Fx.tween(this.scene, { targets: this.counter, scaleX: b, scaleY: b, duration: 300, ease: 'Back.easeOut' });
   }
 }

@@ -14,6 +14,13 @@
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     scene: [BootScene, HomeScene, MoonScene, MarsScene, AlbumHallScene, CertificateScene]
   };
+  // Text is drawn with the VT323 font, so wait for it (max 3 s, then carry on with the fallback)
+  const fontReady = document.fonts && document.fonts.load
+    ? Promise.race([document.fonts.load('32px "VT323"'), new Promise(r => setTimeout(r, 3000))]).catch(() => {})
+    : Promise.resolve();
+  let rotatedAway = false;   // shared by the rotate overlay and the tab-visibility handler
+  fontReady.then(start);
+  function start() {
   window.game = new Phaser.Game(config);
 
   // Block the long-press menu and page gestures on the whole page
@@ -26,7 +33,6 @@
   // Portrait on a phone: show the rotate overlay and pause the game behind it
   const overlay = document.getElementById('rotate');
   const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-  let rotatedAway = false;
   function checkOrientation() {
     const portrait = isTouch && window.innerHeight > window.innerWidth;
     overlay.style.display = portrait ? 'flex' : 'none';
@@ -40,6 +46,7 @@
   window.addEventListener('resize', checkOrientation);
   window.addEventListener('orientationchange', checkOrientation);
   window.game.events.once('ready', checkOrientation);
+  }
 
   // Tab hidden: silence everything; Phaser pauses its own loop
   document.addEventListener('visibilitychange', () => {

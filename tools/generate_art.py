@@ -941,20 +941,30 @@ def planet(kind):
 
 
 def planet_glow(kind):
-    """Dithered pixel ring that sits around a planet when it is hovered (alpha only 0/255)."""
-    S, B = 240, 4                                   # canvas px, 4-px pixel blocks like the planet
-    im = new(S, S)
-    d = dr(im)
-    col = _c('#dfe6ff') if kind == 'moon' else _c('#ffb27a')
-    rng = random.Random(93 if kind == 'moon' else 94)
+    """Soft atmosphere glow for a hovered planet (like a planet photo's halo): a thin bright rim just
+    inside the planet's edge plus a luminous haze fading outwards. This one image is allowed soft
+    alpha; it is drawn with additive blending so it glows. Quantised in 2 px blocks and 16 steps so
+    it still sits with the pixel art."""
+    S, B, R0 = 300, 2, 104                    # canvas px; the planet image is 208 px (radius 104)
+    col = (150, 200, 255) if kind == 'moon' else (255, 150, 90)
+    im = Image.new('RGBA', (S, S), (0, 0, 0, 0))
+    px = im.load()
     c = S / 2
     for by in range(0, S, B):
         for bx in range(0, S, B):
             r = math.hypot(bx + B / 2 - c, by + B / 2 - c)
-            if 100 <= r <= 118:
-                p = 1.0 - (r - 100) / 18              # dense near the planet, thinning outwards
-                if rng.random() < p * 0.9:
-                    d.rectangle([bx, by, bx + B - 1, by + B - 1], fill=col)
+            if r < R0 - 8:
+                a = 0.0
+            elif r < R0 + 1:
+                a = 0.85 * ((r - (R0 - 8)) / 9) ** 1.5          # rim light on the edge
+            else:
+                a = 0.85 * math.exp(-(r - R0 - 1) / 13)          # halo fading out
+            a = round(a * 16) / 16
+            if a <= 0:
+                continue
+            for yy in range(B):
+                for xx in range(B):
+                    px[bx + xx, by + yy] = col + (int(a * 255),)
     return im
 
 
@@ -1000,8 +1010,8 @@ def build():
         'start_button': ((104, 30), start_button()),
         'planet_moon': ((208, 208), planet('moon')),
         'planet_mars': ((208, 208), planet('mars')),
-        'planet_glow_moon': ((240, 240), planet_glow('moon')),
-        'planet_glow_mars': ((240, 240), planet_glow('mars')),
+        'planet_glow_moon': ((300, 300), planet_glow('moon')),
+        'planet_glow_mars': ((300, 300), planet_glow('mars')),
     }
 
 
@@ -1087,7 +1097,7 @@ def validate(sizes_expected):
         if im.size != (w, h):
             fail(f'{name}: size {im.size} != {(w, h)}')
         alphas = set(im.getchannel("A").tobytes())
-        if not alphas <= {0, 255}:
+        if not name.startswith('planet_glow') and not alphas <= {0, 255}:   # glows are soft on purpose
             fail(f'{name}: semi-transparent alpha {sorted(alphas)[:5]}')
         if name in ('moon_buggy', 'mars_rover') and im.size[0] % 4:
             fail(f'{name}: strip width not divisible by 4')

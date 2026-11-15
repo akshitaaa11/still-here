@@ -90,6 +90,7 @@ class MarsScene extends ChapterBase {
 
   enterRecharge() {
     this.setState('RECHARGING');
+    Haptics.lowBattery();
     if (!this.lowText) {
       this.lowText = new PixelText(this, 240, 54, this.cfg.lowBattery, { size: 12, bold: true, color: '#fff3a0', shadow: '#14141f' }).setDepth(80);
       this.tweens.add({ targets: this.lowText, alpha: 0.5, duration: 700, yoyo: true, repeat: -1 });
@@ -109,6 +110,7 @@ class MarsScene extends ChapterBase {
   windGust() {
     if (this.phase === 'asleep') return;
     AudioSys.play('wind');
+    Haptics.wind();
     this.battery = Math.min(100, this.battery + K.WIND_BOOST);
     const y0 = this.panelPos().y;
     for (let i = 0; i < 7; i++) {
@@ -162,6 +164,7 @@ class MarsScene extends ChapterBase {
     this.windOn = false;
     this.clearLowText();
     this.setState('ASLEEP');
+    Haptics.sleep();
     this.phase = 'asleep';
     AudioSys.stop('charge_loop');
     await Fx.tween(this, { targets: this, battery: 0, duration: 1800, ease: 'Sine.easeIn' });

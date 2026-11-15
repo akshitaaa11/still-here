@@ -56,7 +56,7 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
   ok(ids === 'landing_stage,flag,science_station,laser_mirror,rover_sign', 'order + saved: ' + ids);
   const drive = (Date.now() - t0) / 1000;
   console.log(`time from start to 5th card closed: ${drive.toFixed(0)} s`);
-  if (!DEMO) ok(drive > 150 && drive < 230, 'full run about 3 minutes');
+  if (!DEMO) ok(drive > 50 && drive < 140, 'full run about 1-2 minutes (short drives between finds)');
   const bounces = await page.evaluate(() => window.__bounces);
   ok(DEMO || bounces >= 10, `moon bounces happened (${bounces}), fact shown: ${await page.evaluate(() => MoonScene.factShown)}`);
 

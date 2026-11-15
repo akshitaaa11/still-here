@@ -16,27 +16,33 @@ class HomeScene extends Phaser.Scene {
     this.planetButton(124, 'moon', 'Moon', 'MoonScene', 0);
     this.planetButton(356, 'mars', 'Mars', 'MarsScene', 1);
 
-    // Bottom row: Album, Sound, Reset, patches (and the certificate once it is earned)
+    // Bottom row: Album, Sound, Vibrate, Reset, patches (and the certificate once it is earned)
     const y = 240;
-    new Button(this, 46, y, 'Album', () => this.go('AlbumHallScene'), { w: 72, h: 24, size: 12 });
-    this.soundBtn = new Button(this, 132, y, this.soundLabel(), () => {
+    new Button(this, 40, y, 'Album', () => this.go('AlbumHallScene'), { w: 64, h: 24, size: 12 });
+    this.soundBtn = new Button(this, 112, y, this.soundLabel(), () => {
       State.setSound(!State.sound);
       AudioSys.setMuted(!State.sound);
       this.soundBtn.setText(this.soundLabel());
-    }, { w: 88, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
-    new Button(this, 214, y, 'Reset', () => this.confirmReset(), { w: 60, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
+    }, { w: 76, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
+    this.vibBtn = new Button(this, 196, y, this.vibLabel(), () => {
+      State.setVibrate(!State.vibrate);
+      this.vibBtn.setText(this.vibLabel());
+      Haptics.tap();                           // a little buzz to show it is on
+    }, { w: 84, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
+    new Button(this, 268, y, 'Reset', () => this.confirmReset(), { w: 52, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
 
     ['moon', 'mars', 'gold'].forEach((p, i) => {
       const earned = State.hasPatch(p);
-      const img = this.add.image(282 + i * 38, y, earned ? 'patch_' + p : this.emptyPatch()).setScale(0.5);
+      const img = this.add.image(316 + i * 34, y, earned ? 'patch_' + p : this.emptyPatch()).setScale(0.45);
       if (!earned) img.setAlpha(0.6);
     });
     if (State.hasPatch('gold')) {
-      new Button(this, 434, y, 'Certificate', () => this.go('CertificateScene'), { w: 84, h: 24, size: 10, face: 0xe8c34a, lip: 0xb58a1f, color: '#14141f' });
+      new Button(this, 440, y, 'Certificate', () => this.go('CertificateScene'), { w: 76, h: 24, size: 10, face: 0xe8c34a, lip: 0xb58a1f, color: '#14141f' });
     }
   }
 
   soundLabel() { return State.sound ? 'Sound: ON' : 'Sound: OFF'; }
+  vibLabel() { return State.vibrate ? 'Vibrate: ON' : 'Vibrate: OFF'; }
 
   // Dim round slot for a patch not earned yet
   emptyPatch() {
@@ -58,10 +64,10 @@ class HomeScene extends Phaser.Scene {
   // A round pixel planet (canvas-resolution art, shown at scale 0.5). Hover: it grows a little and
   // a pixel glow fades in around its edge. Phones have no hover, so a press does the same.
   planetButton(x, ch, label, sceneKey, i) {
-    const y = 144, base = 0.5, big = 0.56;
-    const glow = this.add.image(x, y, 'planet_glow_' + ch).setScale(base).setAlpha(0);
-    const planet = this.add.image(x, y + 30, 'planet_' + ch).setScale(base).setAlpha(0);
-    const name = new PixelText(this, x, 218, label, { size: 12, bold: true, color: '#f4f1ea', shadow: '#14141f' }).setAlpha(0);
+    const y = 138, base = 0.5, big = 0.56;
+    const glow = this.add.image(x, y, 'planet_glow_' + ch).setScale(base).setAlpha(0).setBlendMode(Phaser.BlendModes.ADD).setDepth(1);
+    const planet = this.add.image(x, y + 30, 'planet_' + ch).setScale(base).setAlpha(0).setDepth(0.5);
+    const name = new PixelText(this, x, 210, label, { size: 12, bold: true, color: '#f4f1ea', shadow: '#14141f' }).setAlpha(0);
 
     // float up into place, then drift very gently
     this.tweens.add({ targets: planet, y, alpha: 1, duration: 600, delay: 150 + i * 150, ease: 'Back.easeOut',
@@ -75,12 +81,12 @@ class HomeScene extends Phaser.Scene {
       if (pulse) { pulse.stop(); pulse = null; }
       this.tweens.add({ targets: [planet, glow], scale: on ? big : base, duration: 180, ease: 'Back.easeOut' });
       this.tweens.add({ targets: glow, alpha: on ? 1 : 0, duration: 200,
-        onComplete: () => { if (on && hovered) pulse = this.tweens.add({ targets: glow, alpha: 0.65, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' }); } });
+        onComplete: () => { if (on && hovered) pulse = this.tweens.add({ targets: glow, alpha: 0.75, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' }); } });
     };
     const hit = Fx.hitRect(this, x, y, 116, 116);
     hit.on('pointerover', () => set(true));
     hit.on('pointerout', () => { down = false; set(false); });
-    hit.on('pointerdown', () => { down = true; AudioSys.play('ui_tap'); if (!hovered) set(true); });
+    hit.on('pointerdown', () => { down = true; AudioSys.play('ui_tap'); Haptics.tap(); if (!hovered) set(true); });
     hit.on('pointerup', () => { if (!down) return; down = false; this.go(sceneKey); });
     (this.planets = this.planets || {})[ch] = { planet, glow, name };
   }

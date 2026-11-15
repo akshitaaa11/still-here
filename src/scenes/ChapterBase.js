@@ -54,6 +54,12 @@ class ChapterBase extends Phaser.Scene {
       this.soundBtn.setText(this.soundLabel());
     }, { w: 64, h: 18, size: 8, face: 0x4a4a55, lip: 0x2b2b33 });
     this.soundBtn.visual.setDepth(92); this.soundBtn.zone.setDepth(93);
+    this.vibBtn = new Button(this, K.GAME_W - 114, 14, this.vibLabel(), () => {
+      State.setVibrate(!State.vibrate);
+      this.vibBtn.setText(this.vibLabel());
+      Haptics.tap();
+    }, { w: 72, h: 18, size: 8, face: 0x4a4a55, lip: 0x2b2b33 });
+    this.vibBtn.visual.setDepth(92); this.vibBtn.zone.setDepth(93);
 
     this.layout();
     this.cameras.main.fadeIn(250);
@@ -63,6 +69,7 @@ class ChapterBase extends Phaser.Scene {
   }
 
   soundLabel() { return State.sound ? 'Sound: ON' : 'Sound: OFF'; }
+  vibLabel() { return State.vibrate ? 'Vibrate: ON' : 'Vibrate: OFF'; }
 
   // Intro line fades in and out over about 3 s
   showIntro(text) {

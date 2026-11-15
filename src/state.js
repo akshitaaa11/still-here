@@ -2,7 +2,7 @@
 // private mode or blocked storage falls back to the in-memory copy, never a crash.
 const State = (() => {
   const PATCHES = ['moon', 'mars', 'gold'];
-  const fresh = () => ({ moon: [], mars: [], patches: [], sound: true, version: K.SAVE_VERSION });
+  const fresh = () => ({ moon: [], mars: [], patches: [], sound: true, vibrate: true, version: K.SAVE_VERSION });
   let data = fresh();
 
   // Accept only what we understand; corrupt or odd saves fall back to defaults.
@@ -14,6 +14,7 @@ const State = (() => {
     }
     if (Array.isArray(o.patches)) d.patches = [...new Set(o.patches.filter(p => PATCHES.includes(p)))];
     if (typeof o.sound === 'boolean') d.sound = o.sound;
+    if (typeof o.vibrate === 'boolean') d.vibrate = o.vibrate;
     return d;
   }
 
@@ -50,11 +51,14 @@ const State = (() => {
     hasPatch(name) { return data.patches.includes(name); },
     get sound() { return data.sound; },
     setSound(on) { data.sound = !!on; this.save(); },
+    get vibrate() { return data.vibrate; },
+    setVibrate(on) { data.vibrate = !!on; this.save(); },
     // Keeps the sound setting: Reset is about progress, not volume.
     reset() {
-      const sound = data.sound;
+      const sound = data.sound, vibrate = data.vibrate;
       data = fresh();
       data.sound = sound;
+      data.vibrate = vibrate;
       this.save();
     },
     get data() { return data; }

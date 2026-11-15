@@ -1,3 +1,5 @@
+// Master volume (was 0.3; raised so every sound is a bit louder)
+const AudioSys_VOL = 0.5;
 // Named sounds, synthesised with Web Audio (README 14). If audio/<name>.mp3 exists and
 // decodes, it silently replaces the synth for that name. Nothing plays before unlock().
 const AudioSys = (() => {
@@ -14,7 +16,7 @@ const AudioSys = (() => {
     try {
       ctx = new AC();
       master = ctx.createGain();
-      master.gain.value = muted ? 0 : 0.3;   // master about 0.3, keep it gentle
+      master.gain.value = muted ? 0 : AudioSys_VOL;   // louder than before, still gentle
       master.connect(ctx.destination);
     } catch (e) { ctx = null; }
     return ctx;
@@ -169,7 +171,7 @@ const AudioSys = (() => {
     stopLoops() { Object.keys(loops).forEach(n => this.stop(n)); },  // loops must stop on scene change
     setMuted(m) {
       muted = !!m;
-      if (master) master.gain.value = muted ? 0 : 0.3;
+      if (master) master.gain.value = muted ? 0 : AudioSys_VOL;
     },
     get muted() { return muted; },
     suspend() { if (ctx && ctx.state === 'running') ctx.suspend().catch(() => {}); },

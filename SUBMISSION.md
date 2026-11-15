@@ -60,6 +60,7 @@ Other data: none. One card cites an Astronomy magazine article about the Lunar R
 - NASA: Rover's Landing Hardware at Eagle Crater, Mars: https://www.nasa.gov/image-article/rovers-landing-hardware-eagle-crater-mars
 - NASA JPL: Opportunity Rover Finds an Iron Meteorite on Mars: https://www.jpl.nasa.gov/news/opportunity-rover-finds-an-iron-meteorite-on-mars/
 - Game engine: Phaser 3 (open source, MIT licence): https://phaser.io
+- Font: VT323 by Peter Hull (Google Fonts, SIL Open Font License): https://fonts.google.com/specimen/VT323
 
 **[YOU]** These links were found and checked through search results only (the build environment could not open the sites). Click each one once before you paste this.
 

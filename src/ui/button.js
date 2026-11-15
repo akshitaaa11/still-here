@@ -29,6 +29,7 @@ class Button {
       if (!this.enabled) return;
       this.down = true;
       AudioSys.play('ui_tap');
+      Haptics.tap();
       scene.tweens.killTweensOf(this.visual);
       scene.tweens.add({ targets: this.visual, scaleX: 0.92, scaleY: 0.92, duration: 70 });
     });

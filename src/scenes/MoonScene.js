@@ -28,6 +28,7 @@ class MoonScene extends ChapterBase {
     if (this.hopping) return;
     this.hopping = true;
     AudioSys.play('bounce');
+    Haptics.bounce();
     this.tweens.add({
       targets: this.rover, y: this.baseY - K.MOON_BOUNCE_PX, duration: 220, yoyo: true, ease: 'Quad.easeOut',
       onComplete: () => { this.rover.y = this.baseY; this.hopping = false; }

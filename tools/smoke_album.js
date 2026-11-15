@@ -135,10 +135,10 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
   await sleep(900);
 
   // ---- Reset with confirm ----
-  await click(214, 240); await sleep(300);
+  await click(268, 240); await sleep(300);
   await click(290, 160); await sleep(300);   // No
   ok((await home()).moon === '4 / 5', 'Reset -> No keeps progress');
-  await click(214, 240); await sleep(300);
+  await click(268, 240); await sleep(300);
   await click(196, 160); await sleep(900);   // Yes
   h = await home();
   ok(h.moon === '0 / 5' && h.mars === '0 / 4' && await page.evaluate(() => JSON.parse(localStorage.getItem('stillHere')).patches.length === 0), 'Reset -> Yes clears progress and patches');

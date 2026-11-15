@@ -1,5 +1,5 @@
 // Chapter config (README 9.3, 9.4). Find order follows cards.json; this file says where each
-// find sits (seconds of driving after the previous one) and which world sprites show it.
+// find sits (seconds of driving after the previous one; kept short so it never feels tiring) and which world sprites show it.
 // Card text never lives here.
 const CHAPTERS = {
   moon: {
@@ -16,11 +16,11 @@ const CHAPTERS = {
     bounceFact: 'Real rover wheels sometimes left the ground in low gravity.',
     endingLine: 'You parked it. It is still there.',
     finds: [
-      { cardId: 'landing_stage', gapSec: 31, sprites: [{ key: 'landing_stage', dx: 0, scale: 1.5 }] },
-      { cardId: 'flag', gapSec: 33, sprites: [{ key: 'flag', dx: 0, scale: 2 }] },
-      { cardId: 'science_station', gapSec: 34, sprites: [{ key: 'science_station', dx: 0, scale: 1.5 }] },
-      { cardId: 'laser_mirror', gapSec: 32, sprites: [{ key: 'laser_mirror', dx: 0, scale: 2 }] },
-      { cardId: 'rover_sign', gapSec: 33, sprites: [{ key: 'rover_sign', dx: 0, scale: 2 }] }
+      { cardId: 'landing_stage', gapSec: 10, sprites: [{ key: 'landing_stage', dx: 0, scale: 1.5 }] },
+      { cardId: 'flag', gapSec: 13, sprites: [{ key: 'flag', dx: 0, scale: 2 }] },
+      { cardId: 'science_station', gapSec: 14, sprites: [{ key: 'science_station', dx: 0, scale: 1.5 }] },
+      { cardId: 'laser_mirror', gapSec: 13, sprites: [{ key: 'laser_mirror', dx: 0, scale: 2 }] },
+      { cardId: 'rover_sign', gapSec: 14, sprites: [{ key: 'rover_sign', dx: 0, scale: 2 }] }
     ]
   },
   mars: {
@@ -50,10 +50,10 @@ const CHAPTERS = {
     ],
     closingLine: 'It is still there. Still here.',
     finds: [
-      { cardId: 'landing_platform', gapSec: 30, sprites: [{ key: 'landing_platform', dx: 0, scale: 1.5 }] },
-      { cardId: 'cone_parachute', gapSec: 32, sprites: [{ key: 'cone', dx: -25, scale: 1.5 }, { key: 'parachute', dx: 95, scale: 1.5 }] },
-      { cardId: 'heat_shield', gapSec: 33, sprites: [{ key: 'heat_shield_a', dx: -15, scale: 1.5 }, { key: 'heat_shield_b', dx: 95, scale: 1.5 }] },
-      { cardId: 'space_rock', gapSec: 31, sprites: [{ key: 'space_rock', dx: 0, scale: 2 }] }
+      { cardId: 'landing_platform', gapSec: 10, sprites: [{ key: 'landing_platform', dx: 0, scale: 1.5 }] },
+      { cardId: 'cone_parachute', gapSec: 13, sprites: [{ key: 'cone', dx: -25, scale: 1.5 }, { key: 'parachute', dx: 95, scale: 1.5 }] },
+      { cardId: 'heat_shield', gapSec: 14, sprites: [{ key: 'heat_shield_a', dx: -15, scale: 1.5 }, { key: 'heat_shield_b', dx: 95, scale: 1.5 }] },
+      { cardId: 'space_rock', gapSec: 13, sprites: [{ key: 'space_rock', dx: 0, scale: 2 }] }
     ]
   }
 };

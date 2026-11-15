@@ -28,7 +28,7 @@ const CardArt = {
       c.fillRect(0, 0, w, h);
       c.globalCompositeOperation = 'source-atop';   // the "?" stays inside the shape
       c.fillStyle = '#8a8f9b';
-      c.font = `bold ${Math.max(8, Math.round(h * 0.6))}px ${PixelText.FAMILY}`;
+      c.font = `${Math.max(10, Math.round(h * 0.9))}px ${PixelText.FAMILY}`;
       c.textAlign = 'center'; c.textBaseline = 'middle';
       c.fillText('?', w / 2, h / 2 + 1);
     }
