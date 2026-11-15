@@ -805,7 +805,8 @@ BIG = {
 
 
 def big_text(img, word, x0, y0, scale, color):
-    """Draw `word` in the BIG font at scale; returns nothing (pixels written into img)."""
+    """Draw `word` in the BIG font at scale. `color` is one colour, or a function
+    (yy, scale) -> colour that shades each font pixel by its row inside the block."""
     px = img.load()
     cx = 0
     for ch in word:
@@ -815,7 +816,7 @@ def big_text(img, word, x0, y0, scale, color):
                 if c == '#':
                     for yy in range(scale):
                         for xx in range(scale):
-                            px[x0 + (cx + rx) * scale + xx, y0 + ry * scale + yy] = color
+                            px[x0 + (cx + rx) * scale + xx, y0 + ry * scale + yy] = color(yy, scale) if callable(color) else color
         cx += len(g[0]) + 1
 
 
@@ -824,26 +825,35 @@ def big_width(word, scale):
 
 
 def logo():
-    """240x80: STILL over HERE, white chunky letters with a thin dark outline."""
+    """240x80: STILL over HERE in chunky letters with the original gold fill
+    (light top edge, gold body, darker bottom edge on every font pixel), a thin dark
+    outline and four sparkles around the title."""
     S = 4
     layer = new(240, 80)
-    white = _c('#ffffff')
+    def gold(yy, scale):
+        return P['SPARK'] if yy == 0 else (P['GOLD2'] if yy == scale - 1 else P['GOLD1'])
     h = 9 * S
     gap = 4
     top = (80 - (2 * h + gap)) // 2
     for k, word in enumerate(('STILL', 'HERE')):
-        big_text(layer, word, (240 - big_width(word, S)) // 2, top + k * (h + gap), S, white)
-    return outline(layer, _c('#140f2e'), 1.5)   # 1 px dark navy border, corners closed
+        big_text(layer, word, (240 - big_width(word, S)) // 2, top + k * (h + gap), S, gold)
+    im = outline(layer, _c('#140f2e'), 1.5)   # 1 px dark navy border, corners closed
+    d = dr(im)
+    sparkle(d, 22, 14, P['SPARK'], True)
+    sparkle(d, 218, 10, P['SPARK'])
+    sparkle(d, 214, 68, P['SPARK'], True)
+    sparkle(d, 26, 66, P['SPARK'])
+    return im
 
 
 def start_button():
-    """120x34 pill: sunset gradient (yellow, orange, pink), dark purple rim, START in purple."""
-    W, H = 120, 34
+    """104x30 pill: sunset gradient (yellow, orange, pink), dark purple rim, START in purple."""
+    W, H = 104, 30
     im = new(W, H)
     d = dr(im)
-    d.rounded_rectangle([0, 0, W - 1, H - 1], radius=14, fill=_c('#2a0d3a'))
+    d.rounded_rectangle([0, 0, W - 1, H - 1], radius=12, fill=_c('#2a0d3a'))
     mask = new(W, H)
-    dr(mask).rounded_rectangle([2, 2, W - 3, H - 3], radius=12, fill=_c('#ffffff'))
+    dr(mask).rounded_rectangle([2, 2, W - 3, H - 3], radius=10, fill=_c('#ffffff'))
     bands = ['#fff6a6', '#fff6a6', '#ffe14a', '#ffe14a', '#ffe14a', '#ffd23f', '#ffd23f', '#ffc23a', '#ffc23a',
              '#ffb03a', '#ffb03a', '#ff9a3c', '#ff9a3c', '#ff8846', '#ff8846', '#ff7552', '#ff7552', '#ff6560',
              '#ff6560', '#ff586e', '#ff586e', '#ff4f7c', '#ff4f7c', '#ff4888', '#ff4888', '#ff4888', '#ff4888',
@@ -854,7 +864,7 @@ def start_button():
         for x in range(W):
             if mk[x, y][3]:
                 px[x, y] = col
-    d.rectangle([12, 4, 20, 5], fill=_c('#ffffff'))   # small glint, top left
+    d.rectangle([10, 4, 17, 5], fill=_c('#ffffff'))   # small glint, top left
     S = 2
     tw = big_width('START', S)
     big_text(im, 'START', (W - tw) // 2, (H - 9 * S) // 2, S, _c('#5b1260'))
@@ -900,7 +910,7 @@ def build():
         'arrow_up': ((96, 96), arrow_button(False)),
         'arrow_down': ((96, 96), arrow_button(True)),
         'logo': ((240, 80), logo()),
-        'start_button': ((120, 34), start_button()),
+        'start_button': ((104, 30), start_button()),
     }
 
 
