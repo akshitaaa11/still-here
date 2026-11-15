@@ -25,7 +25,14 @@ const CHAPTERS = {
   },
   mars: {
     chapter: 'mars', patch: 'mars', battery: true,
-    sky: 'mars_sky', hills: 'mars_hills', ground: 'mars_ground',
+    sky: 'mars_sky',
+    // The owner's Mars picture (tools/build_moon_art.py), canvas resolution (scale 0.5). Its sky is
+    // horizontal bands, so the mountains are one strip (sky included) placed exactly where they sit
+    // in the picture; the strip and its mirror image scroll, the ground and craters/rocks too.
+    mountains: ['mars_mtn_a', 'mars_mtn_b'], mountainsY: 104.44, groundStrip: 'mars_ground', artScale: 0.5,
+    decor: ['mars_decor_1', 'mars_decor_2', 'mars_decor_3', 'mars_decor_4', 'mars_decor_5'],
+    sunPos: [402, 47],                     // the Sun in the picture (sparkles fly from here)
+    baseY: 252, stopDist: 150,
     rover: 'mars_rover', roverScaleKey: 'ROVER_SCALE_MARS', asleep: 'mars_rover_asleep',
     intro: 'You are driving Opportunity. Hold the arrow to drive. Let go to rest and charge.',
     lowBattery: 'Low battery, resting...',
@@ -43,10 +50,10 @@ const CHAPTERS = {
     ],
     closingLine: 'It is still there. Still here.',
     finds: [
-      { cardId: 'landing_platform', gapSec: 30, sprites: [{ key: 'landing_platform', dx: 0 }] },
-      { cardId: 'cone_parachute', gapSec: 32, sprites: [{ key: 'cone', dx: -48 }, { key: 'parachute', dx: 44 }] },
-      { cardId: 'heat_shield', gapSec: 33, sprites: [{ key: 'heat_shield_a', dx: -22 }, { key: 'heat_shield_b', dx: 52 }] },
-      { cardId: 'space_rock', gapSec: 31, sprites: [{ key: 'space_rock', dx: 0 }] }
+      { cardId: 'landing_platform', gapSec: 30, sprites: [{ key: 'landing_platform', dx: 0, scale: 1.5 }] },
+      { cardId: 'cone_parachute', gapSec: 32, sprites: [{ key: 'cone', dx: -25, scale: 1.5 }, { key: 'parachute', dx: 95, scale: 1.5 }] },
+      { cardId: 'heat_shield', gapSec: 33, sprites: [{ key: 'heat_shield_a', dx: -15, scale: 1.5 }, { key: 'heat_shield_b', dx: 95, scale: 1.5 }] },
+      { cardId: 'space_rock', gapSec: 31, sprites: [{ key: 'space_rock', dx: 0, scale: 2 }] }
     ]
   }
 };

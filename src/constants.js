@@ -38,7 +38,7 @@ const K = Object.freeze({
   GROUND_Y: 206,            // top of the ground strip (ground art is 64 px tall)
   ROVER_BASE_Y: 236,        // rover wheels and finds stand on this y
   ROVER_SCALE_MOON: 0.5,    // the owner's rover is stored at canvas resolution (2 px per game unit)
-  ROVER_SCALE_MARS: 3,
+  ROVER_SCALE_MARS: 0.5,    // the owner's Opportunity, stored at canvas resolution
   STOP_DIST: 90,            // rover stops this far (px of world) before a find
   DECEL_SEC: 0.5,           // rover slows to a stop by itself
   ACCEL: 300,               // px/s^2 when pressing or releasing the arrow

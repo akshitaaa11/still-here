@@ -945,13 +945,17 @@ def write_assets_md(names, sizes, status):
         'mars_rover_asleep': '1 frame, dusty',
         'moon_hills': 'tileable sideways (no longer used: the Moon now uses the owner\'s picture)',
         'moon_ground': 'tileable',
-        'mars_hills': 'tileable sideways',
+        'mars_hills': 'tileable sideways (no longer used: Mars now uses the owner\'s picture)',
         'mars_ground': 'tileable',
     }
     human_notes = {
         'moon_buggy': "owner's pixel-art rover at its own pixel size, built by tools/build_moon_art.py (4-frame strip, frame = width / 4, shown at scale 0.5)",
         'moon_sky': "owner's Moon picture, sky only (tools/build_moon_art.py)",
         'moon_ground': "owner's Moon picture, ground (tools/build_moon_art.py), tileable",
+        'mars_rover': "owner's pixel-art Opportunity, built by tools/build_moon_art.py (4-frame strip, shown at scale 0.5)",
+        'mars_rover_asleep': "owner's Opportunity, dusty, for the storm ending (tools/build_moon_art.py)",
+        'mars_sky': "owner's Mars picture (tools/build_moon_art.py)",
+        'mars_ground': "owner's Mars picture, ground (tools/build_moon_art.py), tileable",
     }
     for n in names:
         w, h = sizes[n]
@@ -967,9 +971,9 @@ def write_assets_md(names, sizes, status):
     lines += ['## Other images (not made by this script, never touched by it)', '',
               '| File | Size | Source |', '| --- | --- | --- |',
               '| `cover.png` | 480x270 | Start-screen background supplied by the owner (an AI-generated image, see SUBMISSION.md) |',
-              '| `moon_mtn_a.png`, `moon_mtn_b.png`, `moon_decor_1..5.png` | 1672x216, various | The owner\'s whole mountain range (and its mirror image) plus craters/rocks, by `tools/build_moon_art.py` (canvas resolution, shown at scale 0.5) |',
+              '| `moon_mtn_a/b.png`, `moon_decor_1..5.png`, `mars_mtn_a/b.png`, `mars_decor_1..5.png` | various | The owner\'s mountain ranges (and mirror images) plus craters/rocks, by `tools/build_moon_art.py` (canvas resolution, shown at scale 0.5) |',
               '',
-              'The owner\'s source pictures are kept in `art_src/`. `moon_sky.png`, `moon_ground.png` and `moon_buggy.png` above are',
+              'The owner\'s source pictures are kept in `art_src/`. The Moon and Mars sky, ground and rover files above are',
               'built from them by `tools/build_moon_art.py` (marked `human` so this script never overwrites them).', '']
     open(ASSETS_MD, 'w', encoding='utf-8').write('\n'.join(lines))
 

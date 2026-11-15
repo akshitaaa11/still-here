@@ -13,35 +13,15 @@ class MarsScene extends ChapterBase {
     this.roverStill = false;
     this.sparkT = 0; this.dustT = 0; this.windT = 0; this.windOn = false;
 
-    this.sun = this.add.image(428, 84, 'sun').setScale(2).setDepth(0.5);   // big, in the corner, clear of the intro text
-
-    // Little rocks on the ground, made in code, scrolling with the ground
-    const rng = new Phaser.Math.RandomDataGenerator(['mars-rocks']);
-    const key = this.pebbleTexture();
-    this.rocks = [];
-    for (let i = 0; i < 26; i++) {
-      this.rocks.push({ rx: rng.between(0, 959), img: this.add.image(0, rng.between(212, 266), key, rng.between(0, 2)).setDepth(3) });
-    }
+    // The Sun is part of the owner's sky picture; this marker is where sparkles fly from (its
+    // alpha is still faded by the storm, which only affects the sparkles)
+    const sp = this.cfg.sunPos || [428, 84];
+    this.sun = { x: sp[0], y: sp[1], alpha: 1 };
 
     // Storm tints (no numbers anywhere, just colour)
     this.haze = this.add.rectangle(240, 135, K.GAME_W, K.GAME_H, 0xc98a5a).setAlpha(0).setDepth(19);
     this.stormTint = this.add.rectangle(240, 135, K.GAME_W, K.GAME_H, 0x5a2a1c).setAlpha(0).setDepth(19.5);
     this.dim = this.add.rectangle(240, 135, K.GAME_W, K.GAME_H, 0x000000).setAlpha(0).setDepth(25);
-  }
-
-  // 3 tiny rock variants in one strip (frames 0..2)
-  pebbleTexture() {
-    if (this.textures.exists('mars_pebbles')) return 'mars_pebbles';
-    const t = this.textures.createCanvas('mars_pebbles', 24, 5), c = t.getContext();
-    const shapes = [[[1, 1, 5, 3]], [[9, 0, 4, 4], [8, 2, 6, 2]], [[17, 2, 6, 3], [18, 1, 3, 1]]];
-    shapes.forEach((parts, i) => {
-      parts.forEach(([x, y, w, h]) => { c.fillStyle = '#5a2a1c'; c.fillRect(x, y + 1, w, h); });
-      parts.forEach(([x, y, w, h]) => { c.fillStyle = '#c26b3f'; c.fillRect(x, y, w, h); });
-      c.fillStyle = '#e8a46a'; c.fillRect(parts[0][0] + 1, parts[0][1], 1, 1);
-      t.add(i, 0, i * 8, 0, 8, 5);
-    });
-    t.refresh();
-    return 'mars_pebbles';
   }
 
   chargeMult() {
@@ -74,9 +54,8 @@ class MarsScene extends ChapterBase {
       if (this.sparkT <= 0) { this.sparkT = 0.12 / Math.max(0.15, this.chargeMult()); this.sunSparkle(); }
     }
 
-    // Tiny sway while driving, rocks scroll with the ground
-    if (!this.roverStill) this.rover.y = K.ROVER_BASE_Y - (this.speed > 3 && Math.floor(this.time.now / 160) % 2 ? 1 : 0);
-    for (const r of this.rocks) r.img.x = ((r.rx - this.worldX) % 960 + 960) % 960 - 240;
+    // Tiny sway while driving (the scenery is moved by ChapterBase)
+    if (!this.roverStill) this.rover.y = this.baseY - (this.speed > 3 && Math.floor(this.time.now / 160) % 2 ? 1 : 0);
 
     // Dust: a little when hazy, a lot in the storm
     const rate = { hazy: 8, storm: 45, asleep: 20 }[this.phase] || 0;
@@ -91,7 +70,8 @@ class MarsScene extends ChapterBase {
     }
   }
 
-  panelPos() { return { x: this.rover.x, y: K.ROVER_BASE_Y - 30 }; }
+  // the solar panel deck sits a little above the middle of the rover picture
+  panelPos() { return { x: this.rover.x, y: this.baseY - this.rover.displayHeight * 0.55 }; }
 
   sunSparkle() {
     const p = this.panelPos();
@@ -189,9 +169,9 @@ class MarsScene extends ChapterBase {
     await Fx.wait(this, 300);
     this.speed = 0;
     this.roverStill = true;
-    this.rover.y = K.ROVER_BASE_Y;
+    this.rover.y = this.baseY;
     await Fx.tween(this, { targets: this.rover, alpha: 0.3, duration: 400 });
-    this.rover.setTexture(this.cfg.asleep).setScale(1);
+    this.rover.setTexture(this.cfg.asleep).setScale(K[this.cfg.roverScaleKey] || 1);
     await Fx.tween(this, { targets: this.rover, alpha: 1, duration: 600 });
     await Fx.tween(this, { targets: this.dim, alpha: 0.45, duration: 2000 });
   }

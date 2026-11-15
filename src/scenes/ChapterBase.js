@@ -26,7 +26,7 @@ class ChapterBase extends Phaser.Scene {
     this.add.image(0, 0, c.sky).setOrigin(0, 0).setDisplaySize(K.GAME_W, K.GAME_H).setDepth(0);
     // (a chapter can leave `hills` out and build its own moving scenery in buildWorld)
     if (c.hills) this.hills = this.add.tileSprite(0, 0, K.GAME_W, K.GAME_H, c.hills).setOrigin(0, 0).setDepth(1);
-    // (a chapter can also leave `ground` out and scroll its own, see MoonScene)
+    if (c.mountains) this.buildScenery(c);   // owner's pictures: moving mountains, ground, craters, rocks
     if (c.ground) {
       const gh = this.textures.get(c.ground).getSourceImage().height;   // ground sits on the bottom edge
       this.ground = this.add.tileSprite(0, K.GAME_H - gh, K.GAME_W, gh, c.ground).setOrigin(0, 0).setDepth(2);
@@ -107,6 +107,7 @@ class ChapterBase extends Phaser.Scene {
     // Parallax scroll (whole pixels so nothing shimmers)
     if (this.hills) this.hills.tilePositionX = Math.round(this.worldX * K.PARALLAX_HILLS);
     if (this.ground) this.ground.tilePositionX = Math.round(this.worldX * K.PARALLAX_GROUND);
+    if (this.lanes) this.lanes.forEach(l => l.update(this.worldX));
     this.layout();
 
     // Wheels turn only while moving
@@ -163,5 +164,30 @@ class ChapterBase extends Phaser.Scene {
     const target = has(key) ? key : (has('HomeScene') ? 'HomeScene' : 'BootScene');
     this.cameras.main.fadeOut(250);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(target, data));
+  }
+
+  // Moving scenery from the owner's picture (made by tools/build_moon_art.py, canvas resolution):
+  // the whole mountain range and its mirror image scroll slowly; the ground scrolls at full speed;
+  // craters and rocks are scattered at random sizes so nothing repeats the same way.
+  buildScenery(c) {
+    const sc = c.artScale || 1;
+    const groundTop = K.GAME_H - this.textures.get(c.groundStrip).getSourceImage().height * sc;
+    this.groundTop = groundTop;
+    const my = c.mountainsY != null ? c.mountainsY : groundTop + 2;
+    this.lanes = [
+      new WrapStrip(this, { keys: c.mountains, factor: K.PARALLAX_HILLS, scale: sc, y: my, originY: c.mountainsY != null ? 0 : 1, depth: 1 }),
+      new WrapStrip(this, { keys: [c.groundStrip], factor: K.PARALLAX_GROUND, scale: sc, y: groundTop, originY: 0, depth: 2 }),
+      new ScrollLane(this, {
+        keys: c.decor, seed: c.chapter + '-decor', factor: 1, origin: [0.5, 0.5], stepPx: true,
+        scaleX: [0.6 * sc, 1.3 * sc], scaleY: null, step: [90, 230], depth: 3,
+        y: (r, img) => {
+          const t = r.frac();                                   // 0 = near horizon, 1 = front
+          img.setScale(img.scaleX * (0.55 + 0.65 * t));          // perspective: further = smaller
+          return groundTop + 10 + t * (K.GAME_H - groundTop - 16);
+        },
+        skip: x => this.finds && this.finds.some(f => Math.abs(x - (f.x + K.ROVER_SCREEN_X)) < 110)
+      })
+    ];
+    this.lanes.forEach(l => l.update(0));
   }
 }

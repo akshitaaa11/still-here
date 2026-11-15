@@ -4,8 +4,8 @@
 const Assets = {
   MANIFEST: [
     { key: 'moon_buggy', w: 1084, h: 155, strip: true },   // owner's rover at canvas resolution, 4 frames
-    { key: 'mars_rover', w: 56, h: 40, strip: true },
-    { key: 'mars_rover_asleep', w: 56, h: 40 },
+    { key: 'mars_rover', w: 1200, h: 160, strip: true },   // owner's Opportunity at canvas resolution, 4 frames
+    { key: 'mars_rover_asleep', w: 300, h: 160 },
     { key: 'landing_stage', w: 96, h: 80 },
     { key: 'flag', w: 24, h: 48 },
     { key: 'science_station', w: 64, h: 48 },
@@ -27,9 +27,15 @@ const Assets = {
     { key: 'moon_decor_3', w: 174, h: 30 },
     { key: 'moon_decor_4', w: 156, h: 34 },
     { key: 'moon_decor_5', w: 145, h: 21 },
-    { key: 'mars_sky', w: 480, h: 270 },
-    { key: 'mars_hills', w: 960, h: 270 },
-    { key: 'mars_ground', w: 480, h: 64 },
+    { key: 'mars_sky', w: 960, h: 540 },
+    { key: 'mars_ground', w: 960, h: 140 },
+    { key: 'mars_mtn_a', w: 960, h: 193 },
+    { key: 'mars_mtn_b', w: 960, h: 193 },
+    { key: 'mars_decor_1', w: 172, h: 38 },
+    { key: 'mars_decor_2', w: 181, h: 32 },
+    { key: 'mars_decor_3', w: 92, h: 36 },
+    { key: 'mars_decor_4', w: 43, h: 22 },
+    { key: 'mars_decor_5', w: 48, h: 15 },
     { key: 'patch_moon', w: 64, h: 64 },
     { key: 'patch_mars', w: 64, h: 64 },
     { key: 'patch_gold', w: 64, h: 64 },

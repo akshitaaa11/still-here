@@ -6,31 +6,10 @@ class MoonScene extends ChapterBase {
   getConfig() { return CHAPTERS.moon; }
 
   buildWorld() {
-    // The owner's Moon picture: the sky (with Earth) stays still; the mountains and the craters
-    // and rocks are separate pieces that scroll and never repeat the same way (ScrollLane).
+    // (the moving mountains, ground, craters and rocks are built by ChapterBase.buildScenery)
     Fx.stars(this, 40, 10, 140, 'moon-stars');   // a few extra twinkling stars, drawn in code
     new PixelText(this, 6, 262, 'Not to scale', { size: 8, bold: true, color: '#f4f1ea', shadow: '#14141f', originX: 0, originY: 1 }).setDepth(70);
 
-    const c = this.cfg, sc = c.artScale || 1;
-    const groundTop = K.GAME_H - this.textures.get(c.groundStrip).getSourceImage().height * sc;
-    this.lanes = [
-      // the whole mountain range (and its mirror image), true shape, slow parallax
-      new WrapStrip(this, { keys: c.mountains, factor: K.PARALLAX_HILLS, scale: sc, y: groundTop + 2, originY: 1, depth: 1 }),
-      // the ground, full speed
-      new WrapStrip(this, { keys: [c.groundStrip], factor: K.PARALLAX_GROUND, scale: sc, y: groundTop, originY: 0, depth: 2 }),
-      // craters and rocks: ground speed, random sizes, smaller near the horizon, never under a find
-      new ScrollLane(this, {
-        keys: c.decor, seed: 'moon-decor', factor: 1, origin: [0.5, 0.5], stepPx: true,
-        scaleX: [0.6 * sc, 1.3 * sc], scaleY: null, step: [90, 230], depth: 3,
-        y: (r, img) => {
-          const t = r.frac();                                   // 0 = near horizon, 1 = front
-          img.setScale(img.scaleX * (0.55 + 0.65 * t));          // perspective: further = smaller
-          return groundTop + 10 + t * (K.GAME_H - groundTop - 16);
-        },
-        skip: x => this.finds && this.finds.some(f => Math.abs(x - (f.x + K.ROVER_SCREEN_X)) < 110)
-      })
-    ];
-    this.lanes.forEach(l => l.update(0));
 
     this.bounceT = this.nextBounce();
     this.rover && this.rover.setY(this.baseY);
@@ -39,7 +18,6 @@ class MoonScene extends ChapterBase {
   nextBounce() { return Phaser.Math.FloatBetween(K.MOON_BOUNCE_MIN_SEC, K.MOON_BOUNCE_MAX_SEC); }
 
   afterUpdate(dt) {
-    this.lanes.forEach(l => l.update(this.worldX));
     if (this.state !== 'DRIVING') return;
     this.bounceT -= dt;
     if (this.bounceT <= 0) { this.bounceT = this.nextBounce(); this.bounce(); }

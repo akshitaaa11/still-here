@@ -65,6 +65,8 @@ const ENDING = 'Opportunity was built to last 90 Mars days. It lasted about 14 a
   // ---------- Run 1: Mars after the Moon patch (gold expected) ----------
   await startMars({ moon: ['landing_stage', 'flag', 'science_station', 'laser_mirror', 'rover_sign'], mars: [], patches: ['moon'], sound: true, version: 1 });
   ok((await S()).battery === 100, 'battery starts full');
+  // start well before the first find so the battery checks below have room to drive (demo finds are close)
+  await page.evaluate(() => { game.scene.getScene('MarsScene').worldX = -600; });
   // drain: hold until battery runs out -> RECHARGING (no game over)
   await page.evaluate(() => { game.scene.getScene('MarsScene').battery = 6; });
   await hold(true);
