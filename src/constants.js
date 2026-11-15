@@ -30,6 +30,18 @@ const K = Object.freeze({
   // ?demo=1 fast mode (video capture only)
   DEMO_FIND_SPACING_SEC: 4,
   DEMO_STORM_SCALE: 12 / 45,
+  // World layout (shared by both chapters)
+  GROUND_Y: 206,            // top of the ground strip (ground art is 64 px tall)
+  ROVER_BASE_Y: 236,        // rover wheels and finds stand on this y
+  ROVER_SCALE_MOON: 3,      // integer scales keep pixels crisp
+  ROVER_SCALE_MARS: 3,
+  STOP_DIST: 90,            // rover stops this far (px of world) before a find
+  DECEL_SEC: 0.5,           // rover slows to a stop by itself
+  ACCEL: 300,               // px/s^2 when pressing or releasing the arrow
+  WHEEL_FRAME_SEC: 0.09,
   SAVE_KEY: 'stillHere',
   SAVE_VERSION: 1
 });
+
+// ?demo=1 makes finds ~4 s apart and the storm ~12 s (for recording the video only)
+const DEMO = /[?&]demo=1(&|$)/.test(location.search);
