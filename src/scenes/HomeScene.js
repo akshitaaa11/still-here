@@ -12,8 +12,9 @@ class HomeScene extends Phaser.Scene {
     Fx.stars(this, 90, 0, 269, 'home-stars');
     this.add.image(240, 40, 'logo');
 
-    this.missionCard(124, 'moon', 'Moon Mission', 'Find the 5 things the astronauts left behind!', 0);
-    this.missionCard(356, 'mars', 'Mars Mission', 'Find the 4 things left behind on Mars!', 1);
+    // Two planets: tap one to play that chapter
+    this.planetButton(124, 'moon', 'Moon', 'MoonScene', 0);
+    this.planetButton(356, 'mars', 'Mars', 'MarsScene', 1);
 
     // Bottom row: Album, Sound, Reset, patches (and the certificate once it is earned)
     const y = 240;
@@ -54,39 +55,34 @@ class HomeScene extends Phaser.Scene {
     return 'patch_empty';
   }
 
-  missionCard(x, ch, title, text, i) {
-    const y = 148, w = 212, h = 124;
-    const c = this.add.container(x, y + 40).setAlpha(0);
-    const g = this.add.graphics();
-    g.fillStyle(0x14141f).fillRect(-w / 2 - 2, -h / 2 - 2, w + 4, h + 4);
-    g.fillStyle(ch === 'moon' ? 0xb9b9c4 : 0xe8a46a).fillRect(-w / 2, -h / 2, w, h);
-    g.fillStyle(0x1b1b36).fillRect(-w / 2 + 3, -h / 2 + 3, w - 6, h - 6);
-    c.add(g);
-    c.add(new PixelText(this, 0, -h / 2 + 14, title, { size: 12, bold: true, color: '#e8c34a', shadow: '#14141f' }));
-    c.add(new PixelText(this, 0, -h / 2 + 40, text, { size: 10, color: '#f4f1ea', shadow: '#14141f', wrap: w - 20, align: 'center' }));
+  // A round pixel planet (canvas-resolution art, shown at scale 0.5). Hover: it grows a little and
+  // a pixel glow fades in around its edge. Phones have no hover, so a press does the same.
+  planetButton(x, ch, label, sceneKey, i) {
+    const y = 144, base = 0.5, big = 0.56;
+    const glow = this.add.image(x, y, 'planet_glow_' + ch).setScale(base).setAlpha(0);
+    const planet = this.add.image(x, y + 30, 'planet_' + ch).setScale(base).setAlpha(0);
+    const name = new PixelText(this, x, 218, label, { size: 12, bold: true, color: '#f4f1ea', shadow: '#14141f' }).setAlpha(0);
 
-    const cards = Cards.byChapter(ch), sw = 32, x0 = -(cards.length - 1) * sw / 2;
-    cards.forEach((card, k) => {
-      const owned = State.has(card.id);
-      c.add(this.add.rectangle(x0 + k * sw, 18, 30, 30, owned ? 0x0b0b1a : 0x3a3a5a));   // lighter backing so black silhouettes show
-      const im = this.add.image(x0 + k * sw, 18, owned ? CardArt.picture(this, card, 28, 28) : CardArt.silhouette(this, card, 28, 28));
-      c.add(im);
-      if (!owned) this.tweens.add({ targets: im, scale: 1.1, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: k * 150 });
-    });
-    const n = State.countChapter(ch);
-    const counter = new PixelText(this, 0, 48, `${n} / ${cards.length}`, { size: 12, bold: true, color: '#fff3a0', shadow: '#14141f' });
-    c.add(counter);
-    (this.counters = this.counters || {})[ch] = counter;
+    // float up into place, then drift very gently
+    this.tweens.add({ targets: planet, y, alpha: 1, duration: 600, delay: 150 + i * 150, ease: 'Back.easeOut',
+      onComplete: () => this.tweens.add({ targets: [planet, glow], y: y - 2, duration: 1800 + i * 300, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' }) });
+    this.tweens.add({ targets: name, alpha: 1, duration: 400, delay: 450 + i * 150 });
 
-    // Floats up, then reacts to hover/press; a tap starts the chapter
-    this.tweens.add({ targets: c, y, alpha: 1, duration: 500, delay: 150 + i * 150, ease: 'Back.easeOut' });
-    const zone = Fx.hitRect(this, x, y, w, h);
-    let down = false;
-    const to = s => { this.tweens.killTweensOf(c); this.tweens.add({ targets: c, scale: s, y, alpha: 1, duration: 120 }); };
-    zone.on('pointerover', () => to(1.04));
-    zone.on('pointerout', () => { down = false; to(1); });
-    zone.on('pointerdown', () => { down = true; AudioSys.play('ui_tap'); to(0.96); });
-    zone.on('pointerup', () => { if (!down) return; down = false; to(1); this.go(ch === 'moon' ? 'MoonScene' : 'MarsScene'); });
+    let hovered = false, down = false, pulse = null;
+    const set = on => {
+      hovered = on;
+      this.tweens.killTweensOf([glow]);
+      if (pulse) { pulse.stop(); pulse = null; }
+      this.tweens.add({ targets: [planet, glow], scale: on ? big : base, duration: 180, ease: 'Back.easeOut' });
+      this.tweens.add({ targets: glow, alpha: on ? 1 : 0, duration: 200,
+        onComplete: () => { if (on && hovered) pulse = this.tweens.add({ targets: glow, alpha: 0.65, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' }); } });
+    };
+    const hit = Fx.hitRect(this, x, y, 116, 116);
+    hit.on('pointerover', () => set(true));
+    hit.on('pointerout', () => { down = false; set(false); });
+    hit.on('pointerdown', () => { down = true; AudioSys.play('ui_tap'); if (!hovered) set(true); });
+    hit.on('pointerup', () => { if (!down) return; down = false; this.go(sceneKey); });
+    (this.planets = this.planets || {})[ch] = { planet, glow, name };
   }
 
   go(key, data) {

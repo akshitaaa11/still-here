@@ -871,6 +871,93 @@ def start_button():
     return im
 
 
+# ---------------------------------------------------------------- Home planets
+# Drawn at canvas resolution (the game draws at 2x, K.ZOOM): a 52x52 pixel-art sphere blown up
+# 4x (208x208), shown at scale 0.5. Light comes from the upper left; shading is stepped and
+# ordered-dithered like the owner's pictures.
+PLANET_PAL = {
+    'moon': ['#2e2e3a', '#4a4a58', '#6b6b7a', '#8f8f9e', '#b4b4c2', '#d6d6e0'],
+    'mars': ['#3d160f', '#66261a', '#8f3a24', '#b85230', '#d9733f', '#f0a065'],
+}
+
+
+def _value_noise(rng, n, cell):
+    g = [[rng.random() for _ in range(n // cell + 2)] for _ in range(n // cell + 2)]
+    def f(x, y):
+        gx, gy = x / cell, y / cell
+        x0, y0 = int(gx), int(gy)
+        tx, ty = gx - x0, gy - y0
+        a = g[y0][x0] * (1 - tx) + g[y0][x0 + 1] * tx
+        b = g[y0 + 1][x0] * (1 - tx) + g[y0 + 1][x0 + 1] * tx
+        return a * (1 - ty) + b * ty
+    return f
+
+
+def planet(kind):
+    N, UP = 52, 4
+    rng = random.Random(91 if kind == 'moon' else 92)
+    pal = [_c(h) for h in PLANET_PAL[kind]]
+    big = _value_noise(rng, N, 13)
+    small = _value_noise(rng, N, 5)
+    im = new(N, N)
+    px = im.load()
+    c, r = N / 2, N / 2 - 1.5
+    L = (-0.62, -0.58, 0.53)
+    craters = [(rng.uniform(-0.75, 0.75), rng.uniform(-0.75, 0.75), rng.uniform(0.06, 0.16)) for _ in range(9)] if kind == 'moon' else []
+    for y in range(N):
+        for x in range(N):
+            dx, dy = (x + 0.5 - c) / r, (y + 0.5 - c) / r
+            d2 = dx * dx + dy * dy
+            if d2 > 1:
+                continue
+            nz = math.sqrt(1 - d2)
+            lit = max(0.0, dx * L[0] + dy * L[1] + nz * L[2])
+            v = 0.15 + 0.85 * lit                              # 0..1 brightness
+            n = big(x, y) * 0.65 + small(x, y) * 0.35
+            if kind == 'moon':
+                if n > 0.58:
+                    v -= 0.18                                  # dark "seas"
+                for (u, w, cr) in craters:
+                    e = math.hypot(dx - u, dy - w)
+                    if e < cr:
+                        v -= 0.16                              # crater floor
+                    elif e < cr + 0.05 and (dx - u) + (dy - w) > 0:
+                        v += 0.12                              # sunlit rim
+            else:
+                if n > 0.6:
+                    v -= 0.17                                  # dark regions
+                if abs(dy - 0.05 - 0.25 * dx) < 0.035 and -0.5 < dx < 0.45:
+                    v -= 0.2                                   # a long canyon
+            lvl = v * (len(pal) - 1)
+            base = int(lvl)
+            if (lvl - base) * 16 > BAYER[y % 4][x % 4]:
+                base += 1
+            col = pal[max(0, min(len(pal) - 1, base))]
+            if kind == 'mars' and dy < -0.8:
+                col = _c('#f4efe8') if lit > 0.3 else _c('#c9c2bb')   # polar ice cap
+            px[x, y] = col
+    im = outline(im, _c('#14141f'), 1.0)
+    return im.resize((N * UP, N * UP), Image.NEAREST)
+
+
+def planet_glow(kind):
+    """Dithered pixel ring that sits around a planet when it is hovered (alpha only 0/255)."""
+    S, B = 240, 4                                   # canvas px, 4-px pixel blocks like the planet
+    im = new(S, S)
+    d = dr(im)
+    col = _c('#dfe6ff') if kind == 'moon' else _c('#ffb27a')
+    rng = random.Random(93 if kind == 'moon' else 94)
+    c = S / 2
+    for by in range(0, S, B):
+        for bx in range(0, S, B):
+            r = math.hypot(bx + B / 2 - c, by + B / 2 - c)
+            if 100 <= r <= 118:
+                p = 1.0 - (r - 100) / 18              # dense near the planet, thinning outwards
+                if rng.random() < p * 0.9:
+                    d.rectangle([bx, by, bx + B - 1, by + B - 1], fill=col)
+    return im
+
+
 # ---------------------------------------------------------------- registry
 def strip(frame_fn, fw, fh, n=4, y_off=0):
     im = new(fw * n, fh)
@@ -911,6 +998,10 @@ def build():
         'arrow_down': ((96, 96), arrow_button(True)),
         'logo': ((240, 80), logo()),
         'start_button': ((104, 30), start_button()),
+        'planet_moon': ((208, 208), planet('moon')),
+        'planet_mars': ((208, 208), planet('mars')),
+        'planet_glow_moon': ((240, 240), planet_glow('moon')),
+        'planet_glow_mars': ((240, 240), planet_glow('mars')),
     }
 
 

@@ -32,9 +32,9 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++
 
   // ---- Home reflects saved progress, and still does after reload ----
   await start(partial);
-  const home = () => page.evaluate(() => { const h = game.scene.getScene('HomeScene'); return { moon: h.counters.moon.str, mars: h.counters.mars.str }; });
+  const home = () => page.evaluate(() => ({ moon: State.countChapter('moon') + ' / 5', mars: State.countChapter('mars') + ' / 4' }));
   let h = await home();
-  ok(h.moon === '4 / 5' && h.mars === '2 / 4', `Home counters ${h.moon} | ${h.mars}`);
+  ok(h.moon === '4 / 5' && h.mars === '2 / 4', `Home: saved progress ${h.moon} | ${h.mars}`);
   ok(await page.evaluate(() => game.scene.getScene('HomeScene').children.list.some(o => o.texture && o.texture.key === 'patch_moon')), 'Moon patch shown, others empty');
   await page.screenshot({ path: OUT + 'home.png' });
   await page.reload();

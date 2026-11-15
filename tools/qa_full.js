@@ -66,7 +66,7 @@ async function session(browser, opts = {}) {
   await page.evaluate(() => localStorage.clear());
   await boot();
   ok(await page.evaluate(() => AudioSys.state) === 'running', 'Loading -> tap -> Home, audio unlocked by the tap');
-  ok(await page.evaluate(() => game.scene.getScene('HomeScene').counters.moon.str + '|' + game.scene.getScene('HomeScene').counters.mars.str) === '0 / 5|0 / 4', 'fresh Home: 0 / 5 and 0 / 4');
+  ok(await page.evaluate(() => !!game.scene.getScene('HomeScene').planets.moon && State.countChapter('moon') + State.countChapter('mars') === 0), 'fresh Home: two planets, nothing collected');
 
   // ---------- Moon via its Mission Card ----------
   await click(124, 148);
@@ -95,7 +95,7 @@ async function session(browser, opts = {}) {
   await waitFor(() => game.scene.isActive('HomeScene'));
   ok((await page.evaluate(() => AudioSys.activeLoops())).length === 0, 'no sound loops left running after leaving the Moon');
   await sleep(900);
-  ok(await page.evaluate(() => game.scene.getScene('HomeScene').counters.moon.str) === '5 / 5', 'Home shows 5 / 5');
+  ok(await page.evaluate(() => State.countChapter('moon')) === 5, 'back on Home with the Moon done (5 / 5 saved)');
 
   // ---------- Mars via its Mission Card ----------
   await click(356, 148);
@@ -169,7 +169,7 @@ async function session(browser, opts = {}) {
   await click(240, 130);
   await waitFor(() => game.scene.isActive('HomeScene'));
   await sleep(900);
-  const after = await page.evaluate(() => { const h = game.scene.getScene('HomeScene'); return { m: h.counters.moon.str, r: h.counters.mars.str, p: State.data.patches.join(), sound: State.sound, muted: AudioSys.muted, label: h.soundBtn.label.str }; });
+  const after = await page.evaluate(() => { const h = game.scene.getScene('HomeScene'); return { m: State.countChapter('moon') + ' / 5', r: State.countChapter('mars') + ' / 4', p: State.data.patches.join(), sound: State.sound, muted: AudioSys.muted, label: h.soundBtn.label.str }; });
   ok(after.m === '5 / 5' && after.r === '4 / 4' && after.p === 'moon,mars,gold', 'reload: counters, silhouettes and patches restored');
   ok(!after.sound && after.muted && after.label === 'Sound: OFF', 'mute persists across reload');
   await click(132, 240);   // sound back on
