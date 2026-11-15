@@ -20,6 +20,23 @@ const Fx = {
       }
     }
   },
+  // Fullscreen (Android phones, computers). iPhone Safari does not allow it for web pages; there,
+  // "Add to Home Screen" opens the game full screen instead (see manifest.json / index.html).
+  canFullscreen(scene) { return scene.sys.game.device.fullscreen.available; },
+  fullscreenButton(scene, x, y, w, h) {
+    if (!this.canFullscreen(scene)) return null;
+    const b = new Button(scene, x, y, '', () => {
+      if (scene.scale.isFullscreen) scene.scale.stopFullscreen();
+      else {
+        scene.scale.startFullscreen();
+        try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) { /* not supported */ }
+      }
+    }, { w, h, icon: Icons.full(scene), face: 0x4a4a55, lip: 0x2b2b33 });
+    const sync = () => b.label.scene && b.setIcon(Icons.full(scene));
+    scene.scale.on('enterfullscreen', sync); scene.scale.on('leavefullscreen', sync);
+    scene.events.once('shutdown', () => { scene.scale.off('enterfullscreen', sync); scene.scale.off('leavefullscreen', sync); });
+    return b;
+  },
   // Every scene draws in 480x270 units on the 960x540 canvas (see K.ZOOM)
   fitCamera(scene) {
     scene.cameras.main.setZoom(K.ZOOM).centerOn(K.GAME_W / 2, K.GAME_H / 2);

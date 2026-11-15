@@ -60,6 +60,8 @@ class ChapterBase extends Phaser.Scene {
       Haptics.tap();
     }, { w: 28, h: 20, icon: Icons.vib(), face: 0x4a4a55, lip: 0x2b2b33 });
     this.vibBtn.visual.setDepth(92); this.vibBtn.zone.setDepth(93);
+    const fb = Fx.fullscreenButton(this, K.GAME_W - 90, 14, 28, 20);
+    if (fb) fb.setDepth(92);
 
     this.layout();
     this.cameras.main.fadeIn(250);

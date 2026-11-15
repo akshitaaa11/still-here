@@ -24,6 +24,7 @@ class HomeScene extends Phaser.Scene {
       AudioSys.setMuted(!State.sound);
       this.soundBtn.setIcon(Icons.sound());
     }, { w: 34, h: 24, icon: Icons.sound(), face: 0x4a4a55, lip: 0x2b2b33 });
+    Fx.fullscreenButton(this, K.GAME_W - 20, 16, 30, 22);   // top-right corner
     this.vibBtn = new Button(this, 176, y, '', () => {
       State.setVibrate(!State.vibrate);
       this.vibBtn.setIcon(Icons.vib());

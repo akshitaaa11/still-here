@@ -1,0 +1,10 @@
+{
+  "name": "Still Here",
+  "short_name": "Still Here",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#0b0b1a",
+  "icons": [{ "src": "assets/patch_moon.png", "sizes": "64x64", "type": "image/png" }]
+}
