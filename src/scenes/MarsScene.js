@@ -13,7 +13,7 @@ class MarsScene extends ChapterBase {
     this.roverStill = false;
     this.sparkT = 0; this.dustT = 0; this.windT = 0; this.windOn = false;
 
-    this.sun = this.add.image(416, 72, 'sun').setScale(2).setDepth(0.5);
+    this.sun = this.add.image(428, 84, 'sun').setScale(2).setDepth(0.5);   // big, in the corner, clear of the intro text
 
     // Little rocks on the ground, made in code, scrolling with the ground
     const rng = new Phaser.Math.RandomDataGenerator(['mars-rocks']);

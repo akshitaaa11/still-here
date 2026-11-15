@@ -118,17 +118,24 @@ const AudioSys = (() => {
         s.buffer = c.createBuffer(1, 1, 22050); s.connect(c.destination); s.start(0);
       } catch (e) { /* ignore */ }
     },
-    // Optional MP3 overrides. Missing files are fine (synth is used).
+    // Optional MP3 overrides, listed in audio/sounds.json (rebuild it with tools/list_audio.py).
+    // Only listed files are fetched, so a fresh copy makes no 404 noise. Anything missing or
+    // broken quietly keeps its synth sound.
     loadMp3s() {
       if (!ctx) return;
-      NAMES.forEach(n => {
-        fetch('audio/' + n + '.mp3')
-          .then(r => (r.ok ? r.arrayBuffer() : null))
-          .then(ab => (ab ? ctx.decodeAudioData(ab) : null))
-          .then(buf => { if (buf) buffers[n] = buf; })
-          .catch(() => {});
-      });
+      fetch('audio/sounds.json')
+        .then(r => (r.ok ? r.json() : []))
+        .catch(() => [])
+        .then(list => (Array.isArray(list) ? list : []).filter(n => NAMES.includes(n)).forEach(n => {
+          fetch('audio/' + n + '.mp3')
+            .then(r => (r.ok ? r.arrayBuffer() : null))
+            .then(ab => (ab ? ctx.decodeAudioData(ab) : null))
+            .then(buf => { if (buf) buffers[n] = buf; })
+            .catch(() => {});
+        }));
     },
+    get state() { return ctx ? ctx.state : 'none'; },   // 'running' once a tap has unlocked it
+    hasMp3(name) { return !!buffers[name]; },
     play(name) {
       if (!ctx || muted) return;
       try {

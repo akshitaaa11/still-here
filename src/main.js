@@ -32,7 +32,11 @@
     overlay.style.display = portrait ? 'flex' : 'none';
     if (portrait && !rotatedAway) { rotatedAway = true; window.game.pause(); AudioSys.suspend(); }
     else if (!portrait && rotatedAway) { rotatedAway = false; window.game.resume(); AudioSys.resume(); }
+    // Phaser misses resizes while paused, and phones report the new size late: re-fit twice
+    refit();
+    setTimeout(refit, 250);
   }
+  function refit() { try { window.game.scale.refresh(); } catch (e) { /* not booted yet */ } }
   window.addEventListener('resize', checkOrientation);
   window.addEventListener('orientationchange', checkOrientation);
   window.game.events.once('ready', checkOrientation);

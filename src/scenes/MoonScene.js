@@ -9,7 +9,7 @@ class MoonScene extends ChapterBase {
     Fx.stars(this, 70, 30, 150, 'moon-stars');   // twinkling stars, drawn in code
     // Earth, low in the sky
     this.add.image(436, 86, this.earthTexture()).setDepth(0.6);   // clear of the centred story text
-    new PixelText(this, 6, 262, 'Not to scale', { size: 8, color: '#b9b9c4', shadow: '#14141f', originX: 0, originY: 1 }).setDepth(70);
+    new PixelText(this, 6, 262, 'Not to scale', { size: 8, bold: true, color: '#f4f1ea', shadow: '#14141f', originX: 0, originY: 1 }).setDepth(70);
 
     this.bounceT = this.nextBounce();
     this.rover && this.rover.setY(K.ROVER_BASE_Y);

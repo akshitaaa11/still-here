@@ -22,6 +22,8 @@ class Button {
     this.fitHit();
     this.onResize = () => this.fitHit();
     scene.scale.on('resize', this.onResize);
+    // The scale manager outlives scenes: stop listening when this scene shuts down
+    scene.events.once('shutdown', () => scene.scale.off('resize', this.onResize));
 
     this.zone.on('pointerdown', () => {
       if (!this.enabled) return;
@@ -47,6 +49,7 @@ class Button {
   // Hit area never smaller than 44 CSS px on the real screen.
   // displayScale = game px per CSS px, so 44 CSS px = 44 * displayScale game px.
   fitHit() {
+    if (!this.zone || !this.zone.scene) return;   // already destroyed
     const ds = this.scene.scale.displayScale ? this.scene.scale.displayScale.x : 1;
     const min = 44 * (ds || 1);
     Fx.resizeHit(this.zone, Math.max(this.w, min), Math.max(this.h, min));

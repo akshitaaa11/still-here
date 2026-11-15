@@ -59,7 +59,7 @@ class ChapterBase extends Phaser.Scene {
 
   // Intro line fades in and out over about 3 s
   showIntro(text) {
-    const t = new PixelText(this, 240, 64, text, { size: 10, bold: true, color: '#ffffff', shadow: '#14141f', wrap: 320, align: 'center' })
+    const t = new PixelText(this, 220, 64, text, { size: 10, bold: true, color: '#ffffff', shadow: '#14141f', wrap: 290, align: 'center' })
       .setDepth(80).setAlpha(0);
     const sec = K.INTRO_CARD_SEC * 1000;
     this.tweens.add({ targets: t, alpha: 1, duration: 400, hold: sec - 800, yoyo: true, onComplete: () => t.destroy() });

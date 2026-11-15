@@ -1,6 +1,6 @@
 # PROGRESS.md
 
-## Current: Phase 4 complete. Phase 5 in progress.
+## Current: Phase 5 complete (polish, mobile). Next: Phase 6 publish (human: Netlify Drop).
 
 ### Done
 - Folder structure from README Section 6 (`src/`, `src/data`, `src/scenes`, `src/ui`, `assets/`, `audio/`, `tools/`).
@@ -56,7 +56,25 @@
 - The detail panel always sits beside the card: the canvas is always 480x270 landscape (portrait shows the rotate overlay), so a "narrow" layout can't happen.
 - `tools/smoke_album.js` passes: Home counters and patches persist after reload; all 9 cards open with the correct name, short, long and source; Read more/less; the source link opens in a new tab with noopener; locked cards hint; next/prev skip uncollected and wrap; X, Esc and outside close and the card returns to its own slot; mission card starts its chapter; Reset No/Yes; Certificate. No console errors.
 
-### Next: Phase 5 (polish, mobile)
+### Phase 5 done
+- Art: all 27 files still `ai` in `ASSETS.md`, none replaced yet. The generator validation passes. Strips use frame width = image width / 4.
+- `tools/smoke_mobile.js` passes on 640x360 (DPR 3), iPhone 13 landscape and Pixel 5 landscape:
+  - Page setup: viewport meta blocks zoom; body has touch-action none, user-select none, overflow hidden; the canvas fits at 16:9.
+  - Audio: none before the first tap, running after it.
+  - Tap targets are all at least 44 CSS px.
+  - Page gestures: swipe doesn't scroll or zoom; long-press and text selection are blocked.
+  - Touch control: thumb hold drives; sliding off and lifting stops; touchcancel releases.
+  - Tab hidden suspends audio and resumes it; portrait shows the overlay and pauses, landscape resumes.
+  - Collect works by touch, X closes the album detail by touch. No console errors (strict).
+- Fixed in Phase 5:
+  - Buttons kept listening to resize after their scene ended, which crashed on phone rotation.
+  - The canvas stayed portrait-sized after rotating back (refit on rotation, plus a delayed second refit).
+  - The Mars intro text overlapped the Sun.
+  - "Not to scale" contrast.
+  - Optional MP3s are now listed in `audio/sounds.json` (`tools/list_audio.py`), so a fresh copy makes zero 404 console errors.
+- Robustness: the game plays (Home, both chapters, card, Album Hall) with every PNG blocked (grey boxes), no errors.
+- `?demo=1`: finds 4 s apart, storm about 13 s (`DEMO_*` in constants). Only active with the URL flag.
+- All suites pass: `smoke_moon.js` (demo), `smoke_mars.js` (demo), `smoke_album.js`, `smoke_mobile.js`. Normal-speed Moon and Mars runs passed in Phases 2 and 3.
 
 ### Known issues / for the human
 - The session network blocked the source sites, so the facts are checked from search summaries only (see `FACTCHECK.md`). Please click every source link once before submission.
@@ -67,3 +85,6 @@
 - Optional MP3 override tries `audio/<name>.mp3` for each sound. Missing files give harmless 404 lines in the network log (no JS errors).
 - Not tested here: real phones (iOS audio unlock, Android Chrome) and real audio output. Synth sounds were only checked to run without errors. Listen to them on a phone.
 - The awake Mars rover shows at 3x (42 px wide) and the asleep art at 1x (56 px), because of the strip-size contract.
+- Not testable here: real iOS Safari and Android Chrome hardware, actual sound output, real MP3 overrides (none exist yet), safe-area insets on notched phones (CSS env() is in place).
+- Chrome may log "Ignored attempt to cancel a touchcancel event" when the OS cancels a touch. That's a browser intervention notice from Phaser's touch capture, not an error in our code.
+- In some device monospace fonts, the digit 0 has a slash or dot.
