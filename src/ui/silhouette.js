@@ -39,5 +39,21 @@ const CardArt = {
     t.refresh();
     return key;
   },
-  silhouette(scene, card, w, h) { return this.picture(scene, card, w, h, true); }
+  silhouette(scene, card, w, h) { return this.picture(scene, card, w, h, true); },
+
+  // One frame of a strip as a flat single-colour shape (the other rovers in the Moon ending)
+  frameSilhouette(scene, key, frame, color) {
+    const out = `fsil_${key}_${frame}_${color}`;
+    if (scene.textures.exists(out)) return out;
+    const f = scene.textures.getFrame(key, frame);
+    const t = scene.textures.createCanvas(out, f.cutWidth, f.cutHeight);
+    const c = t.getContext();
+    c.imageSmoothingEnabled = false;
+    c.drawImage(f.source.image, f.cutX, f.cutY, f.cutWidth, f.cutHeight, 0, 0, f.cutWidth, f.cutHeight);
+    c.globalCompositeOperation = 'source-in';
+    c.fillStyle = color;
+    c.fillRect(0, 0, f.cutWidth, f.cutHeight);
+    t.refresh();
+    return out;
+  }
 };

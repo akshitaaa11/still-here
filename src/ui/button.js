@@ -54,6 +54,8 @@ class Button {
   // Put the button parts into a container (the card popup does this)
   addTo(container) { container.add([this.visual, this.zone]); return this; }
 
+  setDepth(d) { this.visual.setDepth(d); this.zone.setDepth(d + 1); return this; }
+
   setEnabled(on) { this.enabled = on; this.inner.setAlpha(on ? 1 : 0.45); return this; }
   setText(t) { this.label.setString(t); return this; }
 

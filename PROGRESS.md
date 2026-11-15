@@ -1,6 +1,6 @@
 # PROGRESS.md
 
-## Current: Phase 1 complete (engine core). Stopped as instructed.
+## Current: Phase 2 complete (Moon chapter). Stopped as instructed.
 
 ### Done
 - Folder structure from README Section 6 (`src/`, `src/data`, `src/scenes`, `src/ui`, `assets/`, `audio/`, `tools/`).
@@ -17,11 +17,16 @@
 
 ### Phase 1 done
 - Plain script files (no modules): `state`, `cards`, `audio` (12 synth sounds + optional MP3 override), `input` (`Controls`), `placeholders` (asset manifest + grey boxes + strip frames = imageWidth / 4), `ui/pixelText`, `ui/fx`, `ui/button`, `ui/silhouette` (`CardArt`), `ui/topBar`, `ui/cardPopup`, `scenes/ChapterBase`, `scenes/BootScene`, `main.js`.
-- `scenes/TestScene.js` is THROWAWAY (two finds, Reset button, R key). Delete it in Phase 2 and point `BootScene.NEXT` at the real scene.
-- Tested in headless Chromium (WebGL) with `tools/smoke_phase1.js`: drive and parallax, release stops, off-canvas release stops, find, stop, card, early and body taps do nothing, Collect, fly to bar, silhouette fill, counter, localStorage save and reload, replay never double-counts, corrupt save, blocked storage, no console errors. Also tested: touch hold and multi-touch, touch tap on Collect, portrait overlay pauses and resumes, and the game playing with every PNG blocked.
+- Tested in headless Chromium (WebGL) with a Phase 1 smoke test, since replaced by `tools/smoke_moon.js`: drive and parallax, release stops, off-canvas release stops, find, stop, card, early and body taps do nothing, Collect, fly to bar, silhouette fill, counter, localStorage save and reload, replay never double-counts, corrupt save, blocked storage, no console errors. Also tested: touch hold and multi-touch, touch tap on Collect, portrait overlay pauses and resumes, and the game playing with every PNG blocked.
 - Text is drawn by `PixelText` (system monospace thresholded to hard pixels). Looks crisp but its shape depends on the device font.
 
-### Next: Phase 2 (Moon chapter)
+### Phase 2 done
+- `src/data/chapters.js` holds chapter config (find gaps in seconds, world sprites, intro, bounce fact, ending line). `ui/patchAnim.js` handles the patch drop. `scenes/MoonScene.js`: stars, Earth, "Not to scale", random 4-7 s bounce with a one-time fact line per session, and the parked ending with two other rover silhouettes.
+- `ChapterBase.finishChapter(patch)` awards the patch, adds the golden patch on the second one, then shows a Continue button. `leave()` falls back to Home, then the title, for scenes that don't exist yet.
+- TestScene was removed. `BootScene.NEXT = 'MoonScene'` until Home exists (Phase 4). Continue after the Moon ending currently returns to the title screen.
+- `tools/smoke_moon.js` (normal and `demo`) passes in both modes. Normal run: 187 s from start to the 5th card closed, then about 15 s of ending. All 5 cards collect in order and are saved, about 30 bounces, the patch is saved, reload keeps 5/5, replay doesn't double-count, no console errors.
+
+### Next: Phase 3 (Mars chapter)
 
 ### Known issues / for the human
 - The session network blocked the source sites, so the facts are checked from search summaries only (see `FACTCHECK.md`). Please click every source link once before submission.

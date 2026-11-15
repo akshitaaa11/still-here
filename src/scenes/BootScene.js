@@ -56,4 +56,4 @@ class BootScene extends Phaser.Scene {
   }
 }
 // Where Boot goes next. Phase 4 changes this to 'HomeScene'.
-BootScene.NEXT = 'TestScene';
+BootScene.NEXT = 'MoonScene';

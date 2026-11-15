@@ -1,6 +1,7 @@
-// Shared base for both chapters (README 5.4, 9.3, 9.4). A subclass only provides getConfig():
-//   { chapter, sky, hills, ground, rover, roverScale, intro, battery?,
-//     finds: [{ cardId, x, sprites: [{ key, dx }] }] }
+// Shared base for both chapters (README 5.4, 9.3, 9.4). A subclass only provides getConfig(),
+// normally an entry of CHAPTERS (src/data/chapters.js):
+//   { chapter, patch, sky, hills, ground, rover, roverScaleKey, intro, battery?,
+//     finds: [{ cardId, gapSec, sprites: [{ key, dx }] }] }
 // The rover stays at ROVER_SCREEN_X; the world scrolls past it.
 // States: IDLE <-> DRIVING, then FINDING (input ignored) until the card is collected.
 // Subclasses may add states and use the hooks: buildWorld, speedMult, afterUpdate,
@@ -25,15 +26,16 @@ class ChapterBase extends Phaser.Scene {
     this.ground = this.add.tileSprite(0, K.GROUND_Y, K.GAME_W, 64, c.ground).setOrigin(0, 0).setDepth(2);
     this.buildWorld();
 
-    // Finds come from config (positions) and cards.json (text); nothing is hard-coded here
-    const spacing = (DEMO ? K.DEMO_FIND_SPACING_SEC : K.FIND_SPACING_SEC) * K.DRIVE_SPEED;
+    // Finds come from config (positions) and cards.json (text); nothing is hard-coded here.
+    // Each find sits gapSec seconds of driving after the one before (?demo=1: a few seconds).
+    let acc = 0;
     this.finds = c.finds.map((f, i) => ({
       def: f, index: i, triggered: false,
-      x: DEMO ? spacing * (i + 1) : f.x,
+      x: (acc += (DEMO ? K.DEMO_FIND_SPACING_SEC : (f.gapSec || K.FIND_SPACING_SEC)) * K.DRIVE_SPEED),
       sprites: f.sprites.map(s => ({ dx: s.dx || 0, img: this.add.image(0, K.ROVER_BASE_Y, s.key).setOrigin(0.5, 1).setDepth(5) }))
     }));
 
-    this.rover = this.add.sprite(K.ROVER_SCREEN_X, K.ROVER_BASE_Y, c.rover, 0).setOrigin(0.5, 1).setScale(c.roverScale).setDepth(10);
+    this.rover = this.add.sprite(K.ROVER_SCREEN_X, K.ROVER_BASE_Y, c.rover, 0).setOrigin(0.5, 1).setScale(K[c.roverScaleKey] || 3).setDepth(10);
 
     this.topBar = new TopBar(this, { chapter: c.chapter, battery: !!c.battery });
     Controls.attachArrow(this);
@@ -47,6 +49,7 @@ class ChapterBase extends Phaser.Scene {
     this.soundBtn.visual.setDepth(92); this.soundBtn.zone.setDepth(93);
 
     this.layout();
+    this.cameras.main.fadeIn(250);
     if (c.intro) this.showIntro(c.intro);
 
     this.events.once('shutdown', () => { AudioSys.stopLoops(); Controls.reset(); });
@@ -117,5 +120,34 @@ class ChapterBase extends Phaser.Scene {
     Controls.consume();            // a still-held arrow must be pressed again
     this.setState('IDLE');
     if (f.index === this.finds.length - 1) this.onChapterComplete();
+  }
+
+  // Patch, then (on the second patch) the golden Still Here patch, then a Continue button.
+  // Replays are fine: awarding a patch twice changes nothing.
+  async finishChapter(patch) {
+    AudioSys.stopLoops();
+    State.awardPatch(patch);
+    let shown = await PatchAnim.play(this, patch);
+    let gold = false;
+    if (State.hasPatch('moon') && State.hasPatch('mars') && !State.hasPatch('gold')) {
+      State.awardPatch('gold');
+      gold = true;
+      await Fx.wait(this, 1200);
+      shown.forEach(o => o.destroy());
+      shown = await PatchAnim.play(this, 'gold');
+    }
+    await Fx.wait(this, 500);
+    await new Promise(res => {
+      new Button(this, 240, 238, 'Continue', res, { w: 110, h: 26, size: 12 }).setDepth(120);
+    });
+    this.leave(gold ? 'AlbumHallScene' : 'HomeScene');
+  }
+
+  // Quick fade, then go. Scenes that do not exist yet fall back to Home, then the title.
+  leave(key) {
+    const has = k => !!this.scene.manager.keys[k];
+    const target = has(key) ? key : (has('HomeScene') ? 'HomeScene' : 'BootScene');
+    this.cameras.main.fadeOut(250);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(target));
   }
 }
