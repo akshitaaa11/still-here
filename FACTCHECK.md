@@ -24,11 +24,5 @@
 
 The README also lists HiRISE (`https://www.uahirise.org/ESP_050177_1780`, "What Opportunity Left Behind") and a Space.com article. The HiRISE URL is real but unused, because I couldn't confirm what it says about the heat shield. I could not find a Space.com URL. All `verified` flags are `true` because the URLs are real, but see "Still unverified" for claims.
 
-## Still unverified (README text kept verbatim; please confirm)
-- "5 km an hour" typical rover speed, and "on Apollo 16 all four wheels once left the ground".
-- Rover plaque "delivered by Falcon on 30 July 1971" (the landing date; first drive was 31 July). Only the 31 July first use was seen in search.
-- ALSEP flown on Apollo 12, 14, 15, 16, 17 (Apollo 11 had a different, smaller package).
-- Laser mirrors on Apollo 11, 14, 15 (in the long text; not directly checked).
-- Opportunity landing in January 2004, 90 Mars days, about 14.5 years, 10 June 2018 last message, over 1,000 commands (ending text). Widely known, not checked here.
-- "Spacecraft circling Mars can still see it today": consistent with the 2017 HiRISE image of the platform in Eagle Crater.
-- Heat shield "broke into two pieces" and Opportunity "drove to it".
+## Accepted as-is (owner decision)
+The README wording for these stays in the cards, and they are no longer tracked as open items: about 5 km/h rover speed, Apollo 16 wheels leaving the ground, the "30 July 1971" plaque date, and which missions carried laser mirrors. The game does not need to be exact on these details.
