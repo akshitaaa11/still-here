@@ -33,7 +33,7 @@ class AlbumHallScene extends Phaser.Scene {
     });
 
     new Button(this, 40, 254, 'Back', () => this.go('HomeScene'), { w: 64, h: 20, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
-    if (this.finale || State.hasPatch('gold')) {
+    if (this.finale || (State.hasPatch('moon') && State.hasPatch('mars'))) {
       const cb = new Button(this, 424, 254, 'Certificate', () => this.go('CertificateScene'),
         { w: 92, h: 20, size: 10, face: 0xe8c34a, lip: 0xb58a1f, color: '#14141f' });
       if (this.finale) cb.pulse(true);

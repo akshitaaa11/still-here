@@ -14,8 +14,8 @@ class CertificateScene extends Phaser.Scene {
     g.fillStyle(0x1b1b36).fillRect(36, 22, 408, 190);
 
     new PixelText(this, 240, 46, 'Still Here Explorer', { size: 16, bold: true, color: '#e8c34a', shadow: '#14141f' });
-    ['moon', 'mars', 'gold'].forEach((p, i) => {
-      const img = this.add.image(160 + i * 80, 112, 'patch_' + p).setScale(0);
+    ['moon', 'mars'].forEach((p, i) => {
+      const img = this.add.image(195 + i * 90, 112, 'patch_' + p).setScale(0);
       this.tweens.add({ targets: img, scale: 1, duration: 450, delay: 200 + i * 200, ease: 'Back.easeOut' });
     });
     new PixelText(this, 240, 168, 'You met everything that was left behind.', { size: 12, bold: true, color: '#ffffff', shadow: '#14141f' });

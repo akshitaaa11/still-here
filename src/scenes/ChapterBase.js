@@ -48,17 +48,17 @@ class ChapterBase extends Phaser.Scene {
     Controls.attachArrow(this);
 
     // Mute button is always visible (README 14)
-    this.soundBtn = new Button(this, K.GAME_W - 40, 14, this.soundLabel(), () => {
+    this.soundBtn = new Button(this, K.GAME_W - 22, 14, '', () => {
       State.setSound(!State.sound);
       AudioSys.setMuted(!State.sound);
-      this.soundBtn.setText(this.soundLabel());
-    }, { w: 64, h: 18, size: 8, face: 0x4a4a55, lip: 0x2b2b33 });
+      this.soundBtn.setIcon(Icons.sound());
+    }, { w: 28, h: 20, icon: Icons.sound(), face: 0x4a4a55, lip: 0x2b2b33 });
     this.soundBtn.visual.setDepth(92); this.soundBtn.zone.setDepth(93);
-    this.vibBtn = new Button(this, K.GAME_W - 114, 14, this.vibLabel(), () => {
+    this.vibBtn = new Button(this, K.GAME_W - 56, 14, '', () => {
       State.setVibrate(!State.vibrate);
-      this.vibBtn.setText(this.vibLabel());
+      this.vibBtn.setIcon(Icons.vib());
       Haptics.tap();
-    }, { w: 72, h: 18, size: 8, face: 0x4a4a55, lip: 0x2b2b33 });
+    }, { w: 28, h: 20, icon: Icons.vib(), face: 0x4a4a55, lip: 0x2b2b33 });
     this.vibBtn.visual.setDepth(92); this.vibBtn.zone.setDepth(93);
 
     this.layout();
@@ -137,32 +137,25 @@ class ChapterBase extends Phaser.Scene {
     if (f.index === this.finds.length - 1) this.onChapterComplete();
   }
 
-  // Patch, then (on the second patch) the golden Still Here patch, then a Continue button.
+  // Patch, then a Continue button (after both patches, the Album Hall finale).
   // Replays are fine: awarding a patch twice changes nothing.
   async finishChapter(patch, closingLine) {
     AudioSys.stopLoops();
-    State.awardPatch(patch);
-    let shown = await PatchAnim.play(this, patch);
-    if (closingLine) {   // stays on screen through the golden patch too
+    const newPatch = State.awardPatch(patch);
+    await PatchAnim.play(this, patch);
+    if (closingLine) {
       const line = new PixelText(this, 240, 218, closingLine, { size: 12, bold: true, color: '#fff3a0', shadow: '#14141f' })
         .setDepth(115).setAlpha(0);
       await Fx.tween(this, { targets: line, alpha: 1, duration: 600 });
       await Fx.wait(this, 1500);
     }
-    let gold = false;
-    if (State.hasPatch('moon') && State.hasPatch('mars') && !State.hasPatch('gold')) {
-      State.awardPatch('gold');
-      gold = true;
-      await Fx.wait(this, 1200);
-      shown.forEach(o => o.destroy());
-      shown = await PatchAnim.play(this, 'gold');
-    }
+    // Both patches earned for the first time: the Album Hall is the finale
+    const finale = newPatch && State.hasPatch('moon') && State.hasPatch('mars');
     await Fx.wait(this, 500);
     await new Promise(res => {
       new Button(this, 240, closingLine ? 250 : 238, 'Continue', res, { w: 110, h: closingLine ? 22 : 26, size: 12 }).setDepth(120);
     });
-    // Second patch: the Album Hall is the finale (then the certificate)
-    this.leave(gold ? 'AlbumHallScene' : 'HomeScene', gold ? { finale: true } : undefined);
+    this.leave(finale ? 'AlbumHallScene' : 'HomeScene', finale ? { finale: true } : undefined);
   }
 
   // Quick fade, then go. Scenes that do not exist yet fall back to Home, then the title.

@@ -933,8 +933,6 @@ def planet(kind):
             if (lvl - base) * 16 > BAYER[y % 4][x % 4]:
                 base += 1
             col = pal[max(0, min(len(pal) - 1, base))]
-            if kind == 'mars' and dy < -0.8:
-                col = _c('#f4efe8') if lit > 0.3 else _c('#c9c2bb')   # polar ice cap
             px[x, y] = col
     im = outline(im, _c('#14141f'), 1.0)
     return im.resize((N * UP, N * UP), Image.NEAREST)

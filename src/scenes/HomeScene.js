@@ -16,29 +16,37 @@ class HomeScene extends Phaser.Scene {
     this.planetButton(124, 'moon', 'Moon', 'MoonScene', 0);
     this.planetButton(356, 'mars', 'Mars', 'MarsScene', 1);
 
-    // Bottom row: Album, Sound, Vibrate, Reset, patches (and the certificate once it is earned)
+    // Bottom row: Album, sound and vibration icons, Reset, and the two patches
     const y = 240;
     new Button(this, 40, y, 'Album', () => this.go('AlbumHallScene'), { w: 64, h: 24, size: 12 });
-    this.soundBtn = new Button(this, 112, y, this.soundLabel(), () => {
+    this.soundBtn = new Button(this, 132, y, '', () => {
       State.setSound(!State.sound);
       AudioSys.setMuted(!State.sound);
-      this.soundBtn.setText(this.soundLabel());
-    }, { w: 76, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
-    this.vibBtn = new Button(this, 196, y, this.vibLabel(), () => {
+      this.soundBtn.setIcon(Icons.sound());
+    }, { w: 34, h: 24, icon: Icons.sound(), face: 0x4a4a55, lip: 0x2b2b33 });
+    this.vibBtn = new Button(this, 176, y, '', () => {
       State.setVibrate(!State.vibrate);
-      this.vibBtn.setText(this.vibLabel());
+      this.vibBtn.setIcon(Icons.vib());
       Haptics.tap();                           // a little buzz to show it is on
-    }, { w: 84, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
+    }, { w: 34, h: 24, icon: Icons.vib(), face: 0x4a4a55, lip: 0x2b2b33 });
     new Button(this, 268, y, 'Reset', () => this.confirmReset(), { w: 52, h: 24, size: 10, face: 0x4a4a55, lip: 0x2b2b33 });
+    // Quiz: unlocks once all 9 cards are in the album
+    const allCards = Cards.list.length > 0 && Cards.list.every(c => State.has(c.id));
+    this.quizBtn = new Button(this, 336, y, 'Quiz', () => { if (allCards) this.go('QuizScene'); else this.lockedHint(); },
+      allCards ? { w: 64, h: 24, size: 12, face: 0x3fae5a, lip: 0x22703a } : { w: 64, h: 24, size: 12, face: 0x4a4a55, lip: 0x2b2b33, color: '#9a9aa8' });
+    if (allCards) this.quizBtn.pulse(true);
 
-    ['moon', 'mars', 'gold'].forEach((p, i) => {
+    ['moon', 'mars'].forEach((p, i) => {
       const earned = State.hasPatch(p);
-      const img = this.add.image(316 + i * 34, y, earned ? 'patch_' + p : this.emptyPatch()).setScale(0.45);
+      const img = this.add.image(400 + i * 40, y, earned ? 'patch_' + p : this.emptyPatch()).setScale(0.5);
       if (!earned) img.setAlpha(0.6);
     });
-    if (State.hasPatch('gold')) {
-      new Button(this, 440, y, 'Certificate', () => this.go('CertificateScene'), { w: 76, h: 24, size: 10, face: 0xe8c34a, lip: 0xb58a1f, color: '#14141f' });
-    }
+  }
+
+  lockedHint() {
+    if (this.hint) this.hint.destroy();
+    this.hint = new PixelText(this, 240, 196, 'Collect all 9 cards to unlock the quiz!', { size: 10, bold: true, color: '#fff3a0', shadow: '#14141f' }).setDepth(50);
+    this.tweens.add({ targets: this.hint, alpha: 0, delay: 1800, duration: 500 });
   }
 
   soundLabel() { return State.sound ? 'Sound: ON' : 'Sound: OFF'; }

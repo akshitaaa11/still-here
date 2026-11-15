@@ -9,7 +9,8 @@
     "long": "The Apollo lander had two parts. The bottom \"descent stage\" had the landing engine and the legs. When the astronauts left, the bottom part stayed as a launch pad for the top part. This happened at every landing site.",
     "sourceLabel": "NASA: Apollo's Lunar Leftovers (web archive)",
     "sourceUrl": "https://webarchive.library.unt.edu/eot2008/20090120064513/http://www.nasa.gov/missions/solarsystem/f_leftovers.html",
-    "verified": true
+    "verified": true,
+    "clue": "Its engine helped the astronauts land softly, and then it became the launch pad for the trip home."
   },
   {
     "id": "flag",
@@ -21,7 +22,8 @@
     "long": "Flags were planted at the Apollo landing sites, and some sites also have plaques left behind. They are small signs saying people were there.",
     "sourceLabel": "NASA: Apollo's Lunar Leftovers (web archive)",
     "sourceUrl": "https://webarchive.library.unt.edu/eot2008/20090120064513/http://www.nasa.gov/missions/solarsystem/f_leftovers.html",
-    "verified": true
+    "verified": true,
+    "clue": "The astronauts planted a flag at every landing site to show where people had stood on the Moon."
   },
   {
     "id": "science_station",
@@ -33,7 +35,8 @@
     "long": "Five Apollo missions (12, 14, 15, 16 and 17) set up a science station called ALSEP. It ran on its own and sent data to Earth by radio.",
     "sourceLabel": "NASA: Apollo 15 Preliminary Science Report, Lunar Surface Science",
     "sourceUrl": "https://www.nasa.gov/wp-content/uploads/static/history/alsj/a15/a15mr-4.htm",
-    "verified": true
+    "verified": true,
+    "clue": "It kept sending Moon facts to Earth long after they went home, and it could even feel moonquakes."
   },
   {
     "id": "laser_mirror",
@@ -45,7 +48,8 @@
     "long": "Apollo 11, 14 and 15 left laser mirrors on the Moon, and they still work today. Scientists send a laser pulse and time how long it takes to come back. That is how we know the Moon drifts away by about 3.8 cm a year.",
     "sourceLabel": "NASA JPL: The Apollo Experiment That Keeps on Giving",
     "sourceUrl": "https://jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/",
-    "verified": true
+    "verified": true,
+    "clue": "Scientists on Earth use it to measure how far away the Moon is."
   },
   {
     "id": "rover_sign",
@@ -57,7 +61,8 @@
     "long": "Three Moon rovers were left on the Moon (Apollo 15, 16 and 17). They were battery-powered, had four wheels and carried two astronauts. Astronauts usually drove about 5 km an hour, and on Apollo 16 all four wheels once left the ground. The Apollo 15 plaque says the rover was the first wheels on the Moon, delivered by Falcon on 30 July 1971.",
     "sourceLabel": "Astronomy: A car for the Moon, the Lunar Roving Vehicle",
     "sourceUrl": "https://www.astronomy.com/observing/a-car-for-the-moon-the-lunar-roving-vehicle/",
-    "verified": true
+    "verified": true,
+    "clue": "A sign on the rover says these were the first wheels on the Moon."
   },
   {
     "id": "landing_platform",
@@ -69,7 +74,8 @@
     "long": "Opportunity landed on Mars in January 2004 and rolled off its landing platform in Eagle Crater. It was built to last 90 Mars days. It worked for about 14 and a half years.",
     "sourceLabel": "NASA: Rover's Landing Hardware at Eagle Crater, Mars",
     "sourceUrl": "https://www.nasa.gov/image-article/rovers-landing-hardware-eagle-crater-mars",
-    "verified": true
+    "verified": true,
+    "clue": "It carried the rover down, and then the rover rolled off to explore."
   },
   {
     "id": "cone_parachute",
@@ -82,7 +88,8 @@
     "long": "The cone and the parachute landed a short way from the platform. The cone protected the rover on the trip, and the parachute slowed the fall.",
     "sourceLabel": "NASA: Rover's Landing Hardware at Eagle Crater, Mars",
     "sourceUrl": "https://www.nasa.gov/image-article/rovers-landing-hardware-eagle-crater-mars",
-    "verified": true
+    "verified": true,
+    "clue": "The cone protected the rover on its long trip, and the parachute slowed it down for landing."
   },
   {
     "id": "heat_shield",
@@ -95,7 +102,8 @@
     "long": "The heat shield broke into two pieces when it hit the ground. Years later, Opportunity drove to it and took a close look.",
     "sourceLabel": "NASA JPL: Opportunity Rover Finds an Iron Meteorite on Mars",
     "sourceUrl": "https://www.jpl.nasa.gov/news/opportunity-rover-finds-an-iron-meteorite-on-mars/",
-    "verified": true
+    "verified": true,
+    "clue": "The spacecraft got very hot as it fell through the sky of Mars, and this shield took the heat so the rover wouldn't burn up."
   },
   {
     "id": "space_rock",
@@ -107,6 +115,7 @@
     "long": "Near the heat shield, Opportunity found a rock now called Heat Shield Rock. It is mostly iron and nickel, and scientists think it is a meteorite.",
     "sourceLabel": "NASA JPL: Opportunity Rover Finds an Iron Meteorite on Mars",
     "sourceUrl": "https://www.jpl.nasa.gov/news/opportunity-rover-finds-an-iron-meteorite-on-mars/",
-    "verified": true
+    "verified": true,
+    "clue": "A basketball-sized rock made of iron and nickel, found next to the heat shield."
   }
 ]

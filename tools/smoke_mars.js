@@ -153,13 +153,13 @@ const ENDING = 'Opportunity was built to last 90 Mars days. It lasted about 14 a
   await sleep(1000); await page.screenshot({ path: OUT + 'ending_all.png' });
 
   await waitFor(() => State.hasPatch('mars'), 20000);
-  await waitFor(() => State.hasPatch('gold'), 20000);
-  ok(true, 'Mars patch then golden Still Here patch earned');
+  
+  ok(true, 'Mars patch earned');
   await waitFor(() => game.scene.getScene('MarsScene').children.list.some(o => o.str === 'It is still there. Still here.'), 10000);
   ok(true, 'closing line "It is still there. Still here." shown');
   await sleep(4000);
   await page.screenshot({ path: OUT + 'gold.png' });
-  ok(JSON.stringify(await page.evaluate(() => JSON.parse(localStorage.getItem('stillHere')).patches)) === '["moon","mars","gold"]', 'patches saved: moon, mars, gold');
+  ok(JSON.stringify(await page.evaluate(() => JSON.parse(localStorage.getItem('stillHere')).patches)) === '["moon","mars"]', 'patches saved: moon, mars, gold');
   await click(240, 250);
   await waitFor(() => game.scene.isActive('AlbumHallScene') && game.scene.getScene('AlbumHallScene').finale, 6000);
   ok(true, 'after the gold patch, Continue opens the Album Hall finale');

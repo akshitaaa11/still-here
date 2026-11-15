@@ -15,7 +15,12 @@ class Button {
     const base = scene.add.rectangle(0, 2, this.w, this.h, lip);
     const top = scene.add.rectangle(0, 0, this.w, this.h, face);
     const shine = scene.add.rectangle(0, -this.h / 2 + 2, this.w - 6, 1, 0xffffff, 0.45);
-    this.label = new PixelText(scene, 0, 0, label, { size: o.size || 10, bold: true, color: o.color || '#ffffff', shadow: '#14141f' });
+    if (o.icon) {   // icon-only button (e.g. sound, vibration)
+      Icons.ensure(scene);
+      this.label = scene.add.image(0, 0, o.icon);
+    } else {
+      this.label = new PixelText(scene, 0, 0, label, { size: o.size || 10, bold: true, color: o.color || '#ffffff', shadow: '#14141f' });
+    }
     this.inner.add([edge, base, top, shine, this.label]);
 
     this.zone = Fx.hitRect(scene, x, y, this.w, this.h);   // tap target (see Fx.hitRect)
@@ -63,6 +68,7 @@ class Button {
 
   setEnabled(on) { this.enabled = on; this.inner.setAlpha(on ? 1 : 0.45); return this; }
   setText(t) { this.label.setString(t); return this; }
+  setIcon(key) { this.label.setTexture(key); return this; }
 
   pulse(on) {
     this.scene.tweens.killTweensOf(this.inner);
