@@ -16,11 +16,11 @@ const CHAPTERS = {
     bounceFact: 'Real rover wheels sometimes left the ground in low gravity.',
     endingLine: 'You parked it. It is still there.',
     finds: [
-      { cardId: 'landing_stage', gapSec: 10, sprites: [{ key: 'landing_stage', dx: 0, scale: 1.5 }] },
-      { cardId: 'flag', gapSec: 13, sprites: [{ key: 'flag', dx: 0, scale: 2 }] },
-      { cardId: 'science_station', gapSec: 14, sprites: [{ key: 'science_station', dx: 0, scale: 1.5 }] },
-      { cardId: 'laser_mirror', gapSec: 13, sprites: [{ key: 'laser_mirror', dx: 0, scale: 2 }] },
-      { cardId: 'rover_sign', gapSec: 14, sprites: [{ key: 'rover_sign', dx: 0, scale: 2 }] }
+      { cardId: 'landing_stage', gapSec: 8, sprites: [{ key: 'landing_stage', dx: 0, scale: 1.5 }] },
+      { cardId: 'flag', gapSec: 10, sprites: [{ key: 'flag', dx: 0, scale: 2 }] },
+      { cardId: 'science_station', gapSec: 11, sprites: [{ key: 'science_station', dx: 0, scale: 1.5 }] },
+      { cardId: 'laser_mirror', gapSec: 10, sprites: [{ key: 'laser_mirror', dx: 0, scale: 2 }] },
+      { cardId: 'rover_sign', gapSec: 11, sprites: [{ key: 'rover_sign', dx: 0, scale: 2 }] }
     ]
   },
   mars: {
@@ -52,10 +52,10 @@ const CHAPTERS = {
     ],
     closingLine: 'It is still there. Still here.',
     finds: [
-      { cardId: 'landing_platform', gapSec: 10, sprites: [{ key: 'landing_platform', dx: 0, scale: 1.5 }] },
-      { cardId: 'cone_parachute', gapSec: 13, sprites: [{ key: 'cone', dx: -25, scale: 1.5 }, { key: 'parachute', dx: 95, scale: 1.5 }] },
-      { cardId: 'heat_shield', gapSec: 14, sprites: [{ key: 'heat_shield_a', dx: -15, scale: 1.5 }, { key: 'heat_shield_b', dx: 95, scale: 1.5 }] },
-      { cardId: 'space_rock', gapSec: 13, sprites: [{ key: 'space_rock', dx: 0, scale: 2 }] }
+      { cardId: 'landing_platform', gapSec: 8, sprites: [{ key: 'landing_platform', dx: 0, scale: 1.5 }] },
+      { cardId: 'cone_parachute', gapSec: 10, sprites: [{ key: 'cone', dx: -25, scale: 1.5 }, { key: 'parachute', dx: 95, scale: 1.5 }] },
+      { cardId: 'heat_shield', gapSec: 11, sprites: [{ key: 'heat_shield_a', dx: -15, scale: 1.5 }, { key: 'heat_shield_b', dx: 95, scale: 1.5 }] },
+      { cardId: 'space_rock', gapSec: 10, sprites: [{ key: 'space_rock', dx: 0, scale: 2 }] }
     ]
   }
 };
