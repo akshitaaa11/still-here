@@ -22,7 +22,8 @@ const CardPopup = {
     const t0 = targets[0];
     Fx.burst(scene, t0 ? t0.x : 240, t0 ? t0.y - t0.displayHeight / 2 : 130, 14, { depth: 95 });
     targets.forEach(t => t.setTint && t.setTint(0xfff3a0));
-    if (targets.length) scene.tweens.add({ targets, alpha: { from: 1, to: 0.6 }, duration: 100, yoyo: true, repeat: 2 });
+    // one gentle pulse over the 0.6 s (kid-safe: never flash faster than 3 Hz)
+    if (targets.length) scene.tweens.add({ targets, alpha: { from: 1, to: 0.6 }, duration: 300, yoyo: true });
     await Fx.wait(scene, 600);
     targets.forEach(t => { if (t.clearTint) t.clearTint(); t.alpha = 1; });
 

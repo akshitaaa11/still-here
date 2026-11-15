@@ -22,7 +22,7 @@
 | landing_platform, cone_parachute | https://www.nasa.gov/image-article/rovers-landing-hardware-eagle-crater-mars | Real. |
 | heat_shield, space_rock | https://www.jpl.nasa.gov/news/opportunity-rover-finds-an-iron-meteorite-on-mars/ | Real. Covers the rock. Only partly covers the heat shield card. |
 
-The README also lists HiRISE (`https://www.uahirise.org/ESP_050177_1780`, "What Opportunity Left Behind") and a Space.com article. The HiRISE URL is real but unused, because I couldn't confirm what it says about the heat shield. I could not find a Space.com URL. All `verified` flags are `true` because the URLs are real, but see "Still unverified" for claims.
+The README also lists HiRISE (`https://www.uahirise.org/ESP_050177_1780`, "What Opportunity Left Behind") and a Space.com article. The HiRISE URL is real but unused, because I couldn't confirm what it says about the heat shield. I could not find a Space.com URL. All `verified` flags are `true` because the URLs are real. See "Accepted as-is" below for the minor details the owner chose not to track.
 
 ## Accepted as-is (owner decision)
 The README wording for these stays in the cards, and they are no longer tracked as open items: about 5 km/h rover speed, Apollo 16 wheels leaving the ground, the "30 July 1971" plaque date, and which missions carried laser mirrors. The game does not need to be exact on these details.

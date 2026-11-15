@@ -1,6 +1,6 @@
 # PROGRESS.md
 
-## Current: Phase 5 complete (polish, mobile). Next: Phase 6 publish (human: Netlify Drop).
+## Current: QA done, SUBMISSION.md written. Next: Phase 6 publish (human: Netlify Drop), demo video, submit.
 
 ### Done
 - Folder structure from README Section 6 (`src/`, `src/data`, `src/scenes`, `src/ui`, `assets/`, `audio/`, `tools/`).
@@ -88,3 +88,36 @@
 - Not testable here: real iOS Safari and Android Chrome hardware, actual sound output, real MP3 overrides (none exist yet), safe-area insets on notched phones (CSS env() is in place).
 - Chrome may log "Ignored attempt to cancel a touchcancel event" when the OS cancels a touch. That's a browser intervention notice from Phaser's touch capture, not an error in our code.
 - In some device monospace fonts, the digit 0 has a slash or dot.
+
+### README Section 17 QA (final run)
+Tools: `tools/qa_full.js` (one continuous playthrough Boot to Certificate, normal speed and `demo`), `smoke_moon.js`, `smoke_mars.js`, `smoke_album.js`, `smoke_mobile.js`. All pass on the final code.
+
+| Item | Result |
+| --- | --- |
+| Loading, tap, Home, sound after tap | PASS (AudioContext running after tap; phones emulated) |
+| Moon: 5 finds, 5 cards, ending, patch | PASS |
+| Mars: 4 finds, battery, low-battery pause, storm, exact ending text, patch | PASS (storm 48 s) |
+| Both patches, golden patch, Album Hall, Certificate | PASS |
+| Album Hall: all 9 cards, Read more, source link, prev/next, close methods | PASS |
+| Reload mid-progress restores counters, silhouettes, patches | PASS |
+| Reset with confirm | PASS |
+| Mute persists | PASS |
+| localStorage disabled: game still runs | PASS (storage getter throws, play continues in memory) |
+| Every PNG missing: still playable | PASS |
+| Every MP3 missing: synth plays | PASS (runs without errors; audible output not checkable here) |
+| Hold arrow during card: no movement, no stuck input | PASS |
+| Release finger off button: rover stops | PASS (touch emulation) |
+| Tab hidden/visible: no stuck loops, no time jump | PASS (audio suspends and resumes; loops stop on scene change; dt capped at 50 ms) |
+| No Mars soft-lock (0 battery during find, storm, ending) | PASS |
+| No console errors in a full playthrough | PASS (strict, normal speed) |
+| Android Chrome / iOS Safari / laptop Chrome | Emulated only (Pixel 5, iPhone 13, 640x360) plus desktop Chromium. Real devices not tested |
+| Portrait overlay + pause | PASS |
+| No pinch zoom, scroll, long-press | PASS (emulated) |
+| Text readable on a small phone | PASS (640x360 screenshots reviewed) |
+| Card text matches Section 12 exactly | PASS: 9/9 short verbatim. Long text verbatim except the README's own CHECK notes and the 3 fallbacks |
+| Every shown source link opens correctly | NOT VERIFIED: sandbox cannot reach the sites. Link wiring tested (opens the URL in a new tab with noopener) |
+| No "dumped"/"littered", no NASA logo | PASS (grep over game files and SUBMISSION.md; art has no marks) |
+| 4 CHECK items resolved or fallback | PASS (see FACTCHECK.md) |
+
+Fixed during QA: the find glow flickered at 5 Hz (over the 3 Hz kid-safety limit). It is now one 0.6 s pulse.
+Full play time for a real player is about 7-8 minutes (Moon about 3.5, Mars about 4 including rests, storm and ending). That's a bit over the README's "about 6".

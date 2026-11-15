@@ -134,7 +134,8 @@ const AudioSys = (() => {
             .catch(() => {});
         }));
     },
-    get state() { return ctx ? ctx.state : 'none'; },   // 'running' once a tap has unlocked it
+    get state() { return ctx ? ctx.state : 'none'; },
+    activeLoops() { return Object.keys(loops); },      // for QA: loops must stop on scene change   // 'running' once a tap has unlocked it
     hasMp3(name) { return !!buffers[name]; },
     play(name) {
       if (!ctx || muted) return;
